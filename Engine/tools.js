@@ -1,0 +1,100 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Proximity
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Locks a point inside of a rectangle from top left to bottom right
+constraint_point = (x,y,tlx,tly,brx,bry) => {
+    let pr = {x: x, y: y};
+    if(x < tlx) pr.x = tlx;
+    if(x > brx) pr.x = brx;
+    if(y < tly) pr.y = tly;
+    if(y > bry) pr.y = bry;
+    return pr;
+}
+
+/// Same as constraint_point, but uses the current object's x and y, and automatically constrains them.
+constrain_entity = (ent,tlx,tly,brx,bry) => {
+    let pr = constraint_point(ent.x,ent.y,tlx,tly,brx,bry);
+    ent.x = pr.x;
+    ent.y = pr.y;
+}
+
+/// Gets the distance between two points. The distance will never be under 0 regardless of input.
+point_distance = (x1,y1,x2,y2) => 
+{
+    return Math.abs(Math.sqrt( ((x1 - x2) ** 2) + ((y1 - y2) ** 2))); // Pythag!
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Collision
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// If a point is within a rectangle from top left to bottom right, return true
+point_inside_rectangle = (x,y,tlx,tly,brx,bry) => {
+    if(x <= tlx || x >= brx || y <= tly || y >= bry) return false;
+    return true;
+}
+
+/// If any point of a rectangle is within the bounds of the other rectangle, return true.
+rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
+    if(point_inside_rectangle(tlx,tly,tlx2,tly2,brx2,bry2)) return true; // TL
+    if(point_inside_rectangle(brx,tly,tlx2,tly2,brx2,bry2)) return true; // TR
+    if(point_inside_rectangle(tlx,bry,tlx2,tly2,brx2,bry2)) return true; // BL
+    if(point_inside_rectangle(brx,bry,tlx2,tly2,brx2,bry2)) return true; // BR
+    return false;
+}
+
+/// If any points of a rectangle are within the radius of the circle, return true
+rectangle_inside_circle = (tlx,tly,brx,bry,cx,cy,rad) => {
+    if(point_inside_circle(tlx,tly,cx,cy,rad)) return true; // TL
+    if(point_inside_circle(brx,tly,cx,cy,rad)) return true; // TR
+    if(point_inside_circle(tlx,bry,cx,cy,rad)) return true; // BL
+    if(point_inside_circle(brx,bry,cx,cy,rad)) return true; // BR
+    return false;
+}
+
+/// If a point is within the radius of the circle, return true
+point_inside_circle = (x,y,cx,cy,rad) => {
+    return point_distance(x,y,cx,cy) <= rad;
+}
+
+// If the circle overlaps with the radius of the other circle, return true
+circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
+    return point_inside_circle(cx,cy,cx2,cy2,rad + rad2);
+}
+
+/// If a point is inside the game's view. A padding may be specified.
+point_inside_view = (x,y,pad) => {
+    return point_inside_rectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + main_canvas.width + pad, Game.active_scene.view_y + main_canvas.height + pad);
+}
+
+/// If a point is outside the game's view. A padding may be specified.
+point_outside_view = (x,y,pad) => {
+    return !point_inside_view(x,y,pad);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Direction
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Get the angle from point1 to point2 in degrees. 
+point_angle = (x1,y1,x2,y2) => {
+    return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+}
+
+/// Get a new position from an angle and distance specified.
+move_toward = (angle,distance) => {
+    let dir = angle / (180 / Math.PI);
+    return {x: Math.cos(dir) * distance, y: Math.sin(dir) * distance}
+}
+
+/// Snaps input angle to a multiple of the snap angle provided. ex: snapping to every 45 degree angle.
+angle_snap = (angle, snap) => {
+    return (Math.round(angle / snap) * snap);
+}
+
+/// Returns an index from 0 to the max specified, based on the angle input. Intended for turning angles into sprite sheet offsets.
+angle_to_index = (angle, max_index) => {
+    let angle_per_index = 360 / max_index;
+    return (Math.round(angle / angle_per_index));
+}

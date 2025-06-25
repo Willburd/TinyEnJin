@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+	<!--Core-->
+	<script src="Engine/constants.js"></script> 
+	<script src="Engine/engine.js"></script> 
+	<script src="Engine/entity.js"></script> 
+	<script src="Engine/render.js" defer="defer"></script> 
+	<script src="Engine/sprites.js" defer="defer"></script> 
+	<script src="Engine/scene.js" defer="defer"></script> 
+	<script src="Engine/destroy.js" defer="defer"></script> 
+	<script src="Engine/collision.js" defer="defer"></script> 
+	<script src="Engine/tools.js" defer="defer"></script> 
+
+	<!--Currently loaded project-->
+	<script src="Rtype/game.js" defer="defer"></script> 
+	<script src="Rtype/Data/assets.js" defer="defer"></script> 
+	<script src="Rtype/player.js" defer="defer"></script> 
+	<script src="Rtype/powerups.js" defer="defer"></script>
+	<script src="Rtype/force.js" defer="defer"></script>  
+	<script src="Rtype/enemy.js" defer="defer"></script>  
+	<script src="Rtype/PowArmor.js" defer="defer"></script>  
+
+	<!--Project Scenes-->
+	<script src="Rtype/Scenes/RScene.js" defer="defer"></script>  
+	<script src="Rtype/Scenes/Gameover.js" defer="defer"></script>  
+	<script src="Rtype/Scenes/Test.js" defer="defer"></script>  
+
+	<!--Game-->
+	<body style="background: #333333; overflow: hidden;">
+		<canvas id="main_surface" style="width: 512px; display: block; margin: auto; border:1px solid #000000;"></canvas>
+		<div id="assets" style="visibility: hidden; width: 0px; height: 0px; display: float;"></div>
+	</body>
+</html>
