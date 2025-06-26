@@ -59,13 +59,7 @@ class Entity
 	early_draw() {};
 	draw()
 	{
-		draw_sprite(this.__canvas,this.sprite,this.frame,
-					this.x,
-					this.y,
-					this.image_alpha,
-					this.image_xscale,this.image_yscale,
-					this.align_h,this.align_v,
-					this.image_angle);
+		draw_entity(this);
 	};
 	late_draw() {
 	};

@@ -2,11 +2,13 @@ const ENTITY_CAP = 60; //2048; (Use lower to catch memory leaks)
 const RENDER_WARNING_LIMIT = 256; // Amount of sprites that can be drawn per frame before it starts giving warnings
 
 const BACKGROUND_LAYER = -99999;
-const DRAW_COLLIDERS = false;
+const DRAW_COLLIDERS = true;
 
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
 const COLLIDERTYPE_CIRCLE = 2;
+
+const MOVE_ITERATIONS = 8;
 
 const BLENDMODE_SOURCEOVER = "source-over"; // This is the default setting and draws new shapes on top of the existing canvas content.
 const BLENDMODE_SOURCEIN = "source-in"; //The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.

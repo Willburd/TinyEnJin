@@ -12,7 +12,7 @@ const __CREATE_RENDER_CONTEXT = () =>
 	if (!ctx) console.error("Failed to get the rendering context for 2D canvas");
 }
 
-__RENDER = () => {
+const __RENDER = () => {
 	// Clear canvas
 	ctx.clearRect(0, 0, main_canvas.width, main_canvas.height);
 

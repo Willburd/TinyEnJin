@@ -1,4 +1,4 @@
-START_SCENE = (new_scene) =>
+const START_SCENE = (new_scene) =>
 {
     let old_scene = Game.active_scene;
     if(old_scene != null)

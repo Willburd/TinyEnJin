@@ -1,19 +1,18 @@
 let sprite_data = {};
 
-/// Load all assets defined in the GAME_ASSETS string, this function iscalled repeatedly until it returns true
-__LOAD_ASSETS = () =>
+/// Load all assets
+const __LOAD_ASSETS = () =>
 {   
 	if(__IMGS_TOTAL == 0)
 	{
 		// Attempt setup, get how many resources this game uses
-		document.getElementById("assets").innerHTML = GAME_ASSETS;
 		init_sprite_library();
 		return false;
 	}
 	// Waiting for setup, return true or false if all assets are loaded
 	return __LOAD_PROGRESS() == 1;
 }
-__LOAD_PROGRESS = () =>
+const __LOAD_PROGRESS = () =>
 {
 	return __IMGS_LOADED / __IMGS_TOTAL;
 }
@@ -34,21 +33,31 @@ const init_sprite_library = () =>
 
 const init_sprite = (img) =>
 {
+	if(img.complete) 
+	{
+		__LOAD_IMG_FINALIZE(img);
+	}
+	else
+	{
+		img.onload = (img) => {__LOAD_IMG_FINALIZE(img)};
+		img.onerror = () => {__IMGS_ERR++;};
+		img.onabort = () => {__IMGS_ERR++;};
+	}
+}
+
+const __LOAD_IMG_FINALIZE = (img) =>
+{
 	let nm = img.id;
 	let wid = img.width;
 	let hig = img.height;
-	img.onload = () => {
-		sprite_data[nm] = {image: img, width: wid, height: hig, anim_length: Math.ceil(img.naturalWidth / wid)};
-		console.log("Made image " + nm + " : " + sprite_data[nm].width + ", " + sprite_data[nm].height);
-		img.style.height = "0px";
-		img.style.width = "0px";
-		__IMGS_LOADED++;
-	};
-	img.onerror = () => {__IMGS_ERR++;};
-	img.onabort = () => {__IMGS_ERR++;};
+	sprite_data[nm] = {image: img, width: wid, height: hig, anim_length: Math.ceil(img.naturalWidth / wid)};
+	console.log("Made image " + nm + " : " + sprite_data[nm].width + ", " + sprite_data[nm].height);
+	img.style.height = "0px";
+	img.style.width = "0px";
+	__IMGS_LOADED++;
 }
 
-const draw_sprite = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, align_h = 0,align_v = 0,angle = 0) =>
+const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, align_h = 0,align_v = 0,angle = 0) =>
 {
 	if(context == undefined || spr == "" || xscale == 0 || yscale == 0) 
 		return; // No.
@@ -104,18 +113,4 @@ const draw_sprite = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, al
 					, (hig * Math.abs(yscale)));									// dheight
 
 	context.setTransform(1, 0, 0, 1, 0, 0);
-}
-
-/// Gets length of a sprite's animation
-const animation_length = (spr) => {
-	if(spr == "")
-		return 0;
-	let data = sprite_data[spr];
-	return data.anim_length;
-}
-
-/// Changing the blending mode globally, pass no arguments to reset it
-const set_blend_mode = (new_mode = BLENDMODE_SOURCEOVER) =>
-{
-	context.globalCompositeOperation = new_mode;
 }

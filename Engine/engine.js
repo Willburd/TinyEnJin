@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
 	__INTERNAL_LOADING();
 })
 // Load assets, makes sure everything gets done instead of blindly trusting!
-__INTERNAL_LOADING = () => {
+const __INTERNAL_LOADING = () => {
 	if(__IMGS_TOTAL > 0) console.log("Loading progress: " + __LOAD_PROGRESS());
 	if(__IMGS_ERR > 0) 
 	{
@@ -27,7 +27,7 @@ document.addEventListener('keyup', (e) => pressedKeys.delete(e.key.toLowerCase()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Frame render loop. Where the game ACTUALLY updates. But much more often renders...
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-__FRAME = (currentTimeMs, forced) => {
+const __FRAME = (currentTimeMs, forced) => {
     const deltaTimeMs = currentTimeMs - Game.active_game.previousTimeMs;
     if (deltaTimeMs >= Game.active_game.FRAME_INTERVAL_MS || forced) {
         Game.active_game.__PROCESS();

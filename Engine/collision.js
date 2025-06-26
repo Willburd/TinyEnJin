@@ -1,4 +1,4 @@
-__RESOLVE_COLLISIONS = (caller,all_colliders) => {
+const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 	all_colliders.forEach(clu => {
 		if(clu != caller)
 		{
@@ -101,7 +101,7 @@ class ColliderPoint
 				ctx.arc(x, y, 0.5, 0, 2 * Math.PI);
 				ctx.fillStyle = "#ff0000BB";
 				ctx.fill();
-				ctx.lineWidth = 4;
+				ctx.lineWidth = 1;
 				ctx.strokeStyle = "#00ff00BB";
 				ctx.stroke();
 				break;
@@ -111,7 +111,7 @@ class ColliderPoint
 				ctx.rect(x, y, this.width, this.height);
 				ctx.fillStyle = "#ff0000BB";
 				ctx.fill();
-				ctx.lineWidth = 4;
+				ctx.lineWidth = 1;
 				ctx.strokeStyle = "#00ff00BB";
 				ctx.stroke();
 				break;
@@ -121,7 +121,7 @@ class ColliderPoint
 				ctx.arc(x, y, this.width, 0, 2 * Math.PI);
 				ctx.fillStyle = "#ff0000BB";
 				ctx.fill();
-				ctx.lineWidth = 4;
+				ctx.lineWidth = 1;
 				ctx.strokeStyle = "#00ff00BB";
 				ctx.stroke();
 				break;
