@@ -2,7 +2,7 @@ const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 	all_colliders.forEach(clu => {
 		if(clu != caller && caller != null && !caller.__destroyed && !clu.__destroyed && caller.collider != null)
 		{
-			if(caller.collider.check_collider(caller,clu)) caller.on_collision(clu);
+			if(caller.collider.CheckCollider(caller,clu)) caller.OnCollision(clu);
 		}
 	});
 };
@@ -24,7 +24,7 @@ class ColliderPoint
 		if(hig != undefined) this.height = hig;
 	}
 
-	check_collider(owner,other)
+	CheckCollider(owner,other)
 	{
 		let x = owner.x + owner.collider.offset_x;
 		let y = owner.y + owner.collider.offset_y;
@@ -33,7 +33,7 @@ class ColliderPoint
 		let othery = other.y + other.collider.offset_y;
 
 		// If we're not in this range don't bother with anything more complex
-		if(!point_inside_circle(x,y,otherx,othery, (owner.collider.width + owner.collider.height + other.collider.width + other.collider.height) )) return false;
+		if(!PointInsideCircle(x,y,otherx,othery, (owner.collider.width + owner.collider.height + other.collider.width + other.collider.height) )) return false;
 
 		switch(owner.collider.collider_type)
 		{
@@ -44,11 +44,11 @@ class ColliderPoint
 						return Math.round(x) == Math.round(otherx) && Math.round(y) == Math.round(othery);
 						
 					case COLLIDERTYPE_RECTANGLE:
-						return point_inside_rectangle(x,y, 
+						return PointInsideRectangle(x,y, 
 														otherx, othery, otherx + other.collider.width, othery + other.collider.height);
 
 					case COLLIDERTYPE_CIRCLE:
-						return point_inside_circle(x,y, 
+						return PointInsideCircle(x,y, 
 													otherx, othery, other.collider.width);
 				}
 				return false;
@@ -57,7 +57,7 @@ class ColliderPoint
 				switch(other.collider.collider_type)
 				{
 					case COLLIDERTYPE_POINT:
-						return point_inside_rectangle(otherx,othery, 
+						return PointInsideRectangle(otherx,othery, 
 														x, y, x + owner.collider.width, y + owner.collider.height);
 
 					case COLLIDERTYPE_RECTANGLE:
@@ -74,7 +74,7 @@ class ColliderPoint
 				switch(other.collider.collider_type)
 				{
 					case COLLIDERTYPE_POINT:
-						return point_inside_circle(otherx,othery, 
+						return PointInsideCircle(otherx,othery, 
 													x, y, owner.collider.width);
 
 					case COLLIDERTYPE_RECTANGLE: // vs SQUARE
@@ -89,7 +89,7 @@ class ColliderPoint
 		}
 	}
 
-	draw_collider(owner)
+	DrawCollider(owner)
 	{
 		let x = owner.x + this.offset_x - Game.active_scene.view_x;
 		let y = owner.y + this.offset_y - Game.active_scene.view_y;

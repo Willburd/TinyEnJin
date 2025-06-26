@@ -8,7 +8,7 @@ const DESTROY = (ent,unloading = false) => {
     Game.active_game.all_entities[ent.id] = null;
 	Game.active_game.recently_free_slots.push(ent.id);
 	// Cleanup
-    ent.on_destroy(unloading);
+    ent.OnDestroy(unloading);
     ent.id = -1;
     if(ent.collider != null) delete ent.collider;
     ent.collider = null;

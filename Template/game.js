@@ -7,7 +7,7 @@ const __SETUP = () => {
 class TemplateGame extends Game {
     name = "Template Game Example";
 
-    init()
+    Init()
     {
         // Configure canvas
         main_canvas.width = 256;
@@ -16,7 +16,7 @@ class TemplateGame extends Game {
         return 1;
 	};
 
-    update()
+    Update()
     {
 		return 1;
 	};

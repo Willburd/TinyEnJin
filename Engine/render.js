@@ -22,15 +22,15 @@ const __RENDER = () => {
 		if(sub_array.length > 0)
 		{
 			sub_array.forEach(enr => {
-				enr.early_draw();
+				enr.EarlyDraw();
 			});
 			sub_array.forEach(enr => {
-				enr.draw();
+				enr.Draw();
 				rendered_ents++;
 			});
 			sub_array.forEach(enr => {
-				enr.late_draw();
-				if(DRAW_COLLIDERS && enr.collider) enr.collider.draw_collider(enr);
+				enr.LateDraw();
+				if(DrawColliderS && enr.collider) enr.collider.DrawCollider(enr);
 			});
 		}
 	});

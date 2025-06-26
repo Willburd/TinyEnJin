@@ -15,7 +15,7 @@ class Entity
 	y = 0;
 	start_x = 0;
 	start_y = 0;
-	depth = 0;		// Draw depth, higher numbers draw closer to the screen
+	depth = 0;		// Draw depth, higher numbers Draw closer to the screen
 	collider = null;
 
 	// Drawing
@@ -25,7 +25,7 @@ class Entity
 	image_yscale = 1;
 	align_v = 0;	// Center offset of sprite x
 	align_h = 0;	// Center offset of sprite y
-	image_angle = 0; // rotation in degrees to draw at
+	image_angle = 0; // rotation in degrees to Draw at
 	image_alpha = 1; // Transparency, with 1 being fully opaque
 
 	// Animation
@@ -44,41 +44,41 @@ class Entity
 		entities_created++;
 	}
 
-	// Custom init
-	on_init() {};
+	// Custom Init
+	OnInit() {};
 
-	// Custom update, in order
-	early_update() {};
+	// Custom Update, in order
+	EarlyUpdate() {};
 	__INTERNAL_UPDATE() 
 	{
-		let len = animation_length(this.sprite)
+		let len = AnimationLength(this.sprite)
 		let frame_before = this.frame;
 		this.frame += this.animation_speed;
-		if(this.animation_speed > 0 && len > 0 && (Math.abs(this.frame) % len) <= (Math.abs(frame_before) % len)) this.on_animation_loop();
+		if(this.animation_speed > 0 && len > 0 && (Math.abs(this.frame) % len) <= (Math.abs(frame_before) % len)) this.OnAnimationLoop();
 	};
-	update() {};
-	late_update() {};
+	Update() {};
+	LateUpdate() {};
 
 	// Collision behavior
-	on_collision(other) {};
+	OnCollision(other) {};
 
-	// Custom draw, in order
-	early_draw() {};
-	draw()
+	// Custom Draw, in order
+	EarlyDraw() {};
+	Draw()
 	{
-		draw_entity(this);
+		DrawEntity(this);
 	};
-	late_draw() {
+	LateDraw() {
 	};
 
 	/// Custom cleanup, unloading is set during DESTROY_ALL or if outside of view edge and can be used to hid destruction effects, etc.
-	on_destroy(unloading) {};
+	OnDestroy(unloading) {};
 
 	/// Triggers each time the animation loop reaches the length of it's animation. Only for built in animation_speed.
-	on_animation_loop() {};
+	OnAnimationLoop() {};
 
 	/// Get the current x and y as a vector
-	get_position() {
+	GetPosition() {
 		return {x: this.x, y: this.y};
 	};
 }
@@ -93,7 +93,7 @@ class GameObj extends Entity
 		super.__INTERNAL_UPDATE();
 		this.x += this.SPEED.x;
 		this.y += this.SPEED.y;
-		if(this.VIEW_EDGE_LIMIT >= 0 && point_outside_view(this.x,this.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
+		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.x,this.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
 	};
 }
 

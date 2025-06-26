@@ -64,7 +64,7 @@ class Game
 	view_x = 0;
 	view_y = 0;
 
-	/// Starts game and begins update loop
+	/// Starts game and begins Update loop
 	__START() {
 		this.FRAME_INTERVAL_MS = 1000 / 60;
 		if(Game.active_game != null)
@@ -73,7 +73,7 @@ class Game
 			return
 		}
 		Game.active_game = this;
-		this.init();
+		this.Init();
 		requestAnimationFrame(__FRAME);
 		return 1;
 	};
@@ -84,8 +84,8 @@ class Game
 		active_game = null
 	}
 
-	/// Custom init code
-    init() {
+	/// Custom Init code
+    Init() {
 		return 1;
 	};
 
@@ -105,12 +105,12 @@ class Game
 			//console.log(Game.active_game.recently_free_slots);
 			Game.active_game.all_entities[finder] = inti;
 			inti.id = finder;
-			inti.on_init();
+			inti.OnInit();
 		}
 
-		// Self update
-		this.update();
-		if(Game.active_scene) Game.active_scene.update();
+		// Self Update
+		this.Update();
+		if(Game.active_scene) Game.active_scene.Update();
 
 		// Update objects
 		let all_colliders = [];
@@ -122,7 +122,7 @@ class Game
 				// Update early event
 				if(enu != null && !enu.__destroyed)
 				{
-					enu.early_update();
+					enu.EarlyUpdate();
 				}	
 			});
 			this.all_entities.forEach(enu => {
@@ -130,7 +130,7 @@ class Game
 				if(enu != null && !enu.__destroyed)
 				{
 					enu.__INTERNAL_UPDATE();
-					enu.update();
+					enu.Update();
 					processed_ents++;
 				}
 			});
@@ -138,8 +138,8 @@ class Game
 				// Update late event
 				if(enu != null && !enu.__destroyed)
 				{
-					enu.late_update();
-					if(!enu.__destroyed) // Check if late update destroyed us...
+					enu.LateUpdate();
+					if(!enu.__destroyed) // Check if late Update destroyed us...
 					{
 						if(enu.visible)	
 						{
@@ -170,6 +170,6 @@ class Game
 		return processed_ents;
 	}
 
-	/// Custom update code
-    update() {};
+	/// Custom Update code
+    Update() {};
 }

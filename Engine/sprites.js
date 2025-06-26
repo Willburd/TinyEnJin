@@ -6,7 +6,7 @@ const __LOAD_ASSETS = () =>
 	if(__IMGS_TOTAL == 0)
 	{
 		// Attempt setup, get how many resources this game uses
-		init_sprite_library();
+		__INIT_SPRITE_LIBRARY();
 		return false;
 	}
 	// Waiting for setup, return true or false if all assets are loaded
@@ -21,17 +21,17 @@ const __LOAD_PROGRESS = () =>
 let __IMGS_TOTAL = 0;
 let __IMGS_LOADED = 0;
 let __IMGS_ERR = 0;
-const init_sprite_library = () =>
+const __INIT_SPRITE_LIBRARY = () =>
 {
 	const all_images = document.getElementsByTagName("img");
 	for (let index = 0; index < all_images.length; ++index) {
 		const element = all_images[index];
-		init_sprite(element);
+		__INIT_SPRITE(element);
 		__IMGS_TOTAL++;
 	}
 }
 
-const init_sprite = (img) =>
+const __INIT_SPRITE = (img) =>
 {
 	if(img.complete) 
 	{

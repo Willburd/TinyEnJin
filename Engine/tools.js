@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Locks a point inside of a rectangle from top left to bottom right
-const constraint_point = (x,y,tlx,tly,brx,bry) => {
+const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
     let pr = {x: x, y: y};
     if(x < tlx) pr.x = tlx;
     if(x > brx) pr.x = brx;
@@ -12,15 +12,15 @@ const constraint_point = (x,y,tlx,tly,brx,bry) => {
     return pr;
 }
 
-/// Same as constraint_point, but uses the current object's x and y, and automatically constrains them.
-const constrain_entity = (ent,tlx,tly,brx,bry) => {
-    let pr = constraint_point(ent.x,ent.y,tlx,tly,brx,bry);
+/// Same as ConstrainPoint, but uses the current object's x and y, and automatically constrains them.
+const ConstrainEntity = (ent,tlx,tly,brx,bry) => {
+    let pr = ConstrainPoint(ent.x,ent.y,tlx,tly,brx,bry);
     ent.x = pr.x;
     ent.y = pr.y;
 }
 
 /// Gets the distance between two points. The distance will never be under 0 regardless of input.
-const point_distance = (x1,y1,x2,y2) => 
+const PointDistance = (x1,y1,x2,y2) => 
 {
     return Math.abs(Math.sqrt( ((x1 - x2) ** 2) + ((y1 - y2) ** 2))); // Pythag!
 }
@@ -30,47 +30,48 @@ const point_distance = (x1,y1,x2,y2) =>
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// If a point is within a rectangle from top left to bottom right, return true
-const point_inside_rectangle = (x,y,tlx,tly,brx,bry) => {
+const PointInsideRectangle = (x,y,tlx,tly,brx,bry) => {
     if(x <= tlx || x >= brx || y <= tly || y >= bry) return false;
     return true;
 }
 
 /// If any point of a rectangle is within the bounds of the other rectangle, return true.
 const rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
-    if(point_inside_rectangle(tlx,tly,tlx2,tly2,brx2,bry2)) return true; // TL
-    if(point_inside_rectangle(brx,tly,tlx2,tly2,brx2,bry2)) return true; // TR
-    if(point_inside_rectangle(tlx,bry,tlx2,tly2,brx2,bry2)) return true; // BL
-    if(point_inside_rectangle(brx,bry,tlx2,tly2,brx2,bry2)) return true; // BR
+    if(PointInsideRectangle(tlx,tly,tlx2,tly2,brx2,bry2)) return true; // TL
+    if(PointInsideRectangle(brx,tly,tlx2,tly2,brx2,bry2)) return true; // TR
+    if(PointInsideRectangle(tlx,bry,tlx2,tly2,brx2,bry2)) return true; // BL
+    if(PointInsideRectangle(brx,bry,tlx2,tly2,brx2,bry2)) return true; // BR
     return false;
 }
 
 /// If any points of a rectangle are within the radius of the circle, return true
 const rectangle_inside_circle = (tlx,tly,brx,bry,cx,cy,rad) => {
-    if(point_inside_circle(tlx,tly,cx,cy,rad)) return true; // TL
-    if(point_inside_circle(brx,tly,cx,cy,rad)) return true; // TR
-    if(point_inside_circle(tlx,bry,cx,cy,rad)) return true; // BL
-    if(point_inside_circle(brx,bry,cx,cy,rad)) return true; // BR
+    if(PointInsideRectangle(cx,cy,tlx,tly,brx,bry)) return true;
+    if(PointInsideCircle(tlx,tly,cx,cy,rad)) return true; // TL
+    if(PointInsideCircle(brx,tly,cx,cy,rad)) return true; // TR
+    if(PointInsideCircle(tlx,bry,cx,cy,rad)) return true; // BL
+    if(PointInsideCircle(brx,bry,cx,cy,rad)) return true; // BR
     return false;
 }
 
 /// If a point is within the radius of the circle, return true
-const point_inside_circle = (x,y,cx,cy,rad) => {
-    return point_distance(x,y,cx,cy) <= rad;
+const PointInsideCircle = (x,y,cx,cy,rad) => {
+    return PointDistance(x,y,cx,cy) <= rad;
 }
 
 // If the circle overlaps with the radius of the other circle, return true
 const circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
-    return point_inside_circle(cx,cy,cx2,cy2,rad + rad2);
+    return PointInsideCircle(cx,cy,cx2,cy2,rad + rad2);
 }
 
 /// If a point is inside the game's view. A padding may be specified.
-const point_inside_view = (x,y,pad) => {
-    return point_inside_rectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + view_width() + pad, Game.active_scene.view_y + view_height() + pad);
+const PointInsideView = (x,y,pad) => {
+    return PointInsideRectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + ViewWidth() + pad, Game.active_scene.view_y + ViewHeight() + pad);
 }
 
 /// If a point is outside the game's view. A padding may be specified.
-const point_outside_view = (x,y,pad) => {
-    return !point_inside_view(x,y,pad);
+const PointOutsideView = (x,y,pad) => {
+    return !PointInsideView(x,y,pad);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,29 +79,29 @@ const point_outside_view = (x,y,pad) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Get the angle from point1 to point2 in degrees from 0 to 360.
-const find_angle = (x1,y1,x2,y2) => {
+const FindAngle = (x1,y1,x2,y2) => {
     return (360 + (Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI)) % 360; // ALWAYS positive!
 }
 
 /// Returns an angle from 0 to 360 from the position to the entity's x/y. If it is unable to find an angle it will return -1
-const angle_to = (x,y,ent) => {
+const AngleTo = (x,y,ent) => {
     if(ent == null) return -1;
-    return find_angle(x,y,ent.x,ent.y); 
+    return FindAngle(x,y,ent.x,ent.y); 
 }
 
 /// Get a new position from an angle and distance specified.
-const move_toward = (angle,distance) => {
+const MoveToward = (angle,distance) => {
     let dir = angle / (180 / Math.PI);
     return {x: Math.cos(dir) * distance, y: Math.sin(dir) * distance}
 }
 
 /// Snaps input angle to a multiple of the snap angle provided. ex: snapping to every 45 degree angle.
-const angle_snap = (angle, snap) => {
+const AngleSnap = (angle, snap) => {
     return (Math.round(angle / snap) * snap);
 }
 
 /// Returns an index from 0 to the max specified, based on the angle input. Intended for turning angles into sprite sheet offsets.
-const angle_to_index = (angle, max_index) => {
+const AngleToIndex = (angle, max_index) => {
     let angle_per_index = 360 / max_index;
     return (Math.round(angle / angle_per_index));
 }
@@ -110,14 +111,14 @@ const angle_to_index = (angle, max_index) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Get the width or height of the game's viewport
-const view_width = () => {
+const ViewWidth = () => {
     return main_canvas.width
 }
-const view_height = () => {
+const ViewHeight = () => {
     return main_canvas.height
 }
 
-const draw_entity = (ent) =>
+const DrawEntity = (ent) =>
 {
     __DRAWSPRITE(ent.__canvas,ent.sprite,ent.frame,
                 ent.x,
@@ -128,7 +129,7 @@ const draw_entity = (ent) =>
                 ent.image_angle);
 }
 
-const draw_sprite = (draw_canvas, spr, frame, xx, yy, alpha = 1, scale_x = 1, scale_y = 1, align_x = 0, align_y = 0, angle = 0) =>
+const DrawSprite = (draw_canvas, spr, frame, xx, yy, alpha = 1, scale_x = 1, scale_y = 1, align_x = 0, align_y = 0, angle = 0) =>
 {
     __DRAWSPRITE(draw_canvas,spr,frame,
                 xx,
@@ -140,7 +141,7 @@ const draw_sprite = (draw_canvas, spr, frame, xx, yy, alpha = 1, scale_x = 1, sc
 }
 
 /// Gets length of a sprite's animation
-const animation_length = (spr) => {
+const AnimationLength = (spr) => {
 	if(spr == "")
 		return 0;
 	let data = sprite_data[spr];
@@ -148,7 +149,7 @@ const animation_length = (spr) => {
 }
 
 /// Changing the blending mode globally, pass no arguments to reset it
-const set_blend_mode = (new_mode = BLENDMODE_SOURCEOVER) =>
+const SetBlendMode = (new_mode = BLENDMODE_SOURCEOVER) =>
 {
 	context.globalCompositeOperation = new_mode;
 }
@@ -157,25 +158,25 @@ const set_blend_mode = (new_mode = BLENDMODE_SOURCEOVER) =>
 // Math and RNG
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const lerp = (start, end, percent) =>
+const Lerp = (start, end, percent) =>
 {
     return (start * (1 - percent)) + (end * percent);
 }
 
 /// Gets a random number within the range provided
-const rand = (start, end) =>
+const Rand = (start, end) =>
 {
-    return lerp(start, end, Math.random());
+    return Lerp(start, end, Math.random());
 }
 
 /// Gets a random angle from 0 to 360
-const random_dir = () =>
+const RandomAngle = () =>
 {
-    return rand(0,360);
+    return Rand(0,360);
 }
 
 /// returns true if rng rolls a value under the 0 to 100% percent argument.
-const prob = (percent) =>
+const Prob = (percent) =>
 {
     return (Math.random() * 100) < percent;
 }

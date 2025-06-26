@@ -3,11 +3,11 @@ const START_SCENE = (new_scene) =>
     let old_scene = Game.active_scene;
     if(old_scene != null)
     {
-        old_scene.on_destroy();
-        if(new_scene != null) new_scene.on_transfer(old_scene);
+        old_scene.OnDestroy();
+        if(new_scene != null) new_scene.OnTransfer(old_scene);
     }
     Game.active_scene = new_scene;
-    if(Game.active_scene) Game.active_scene.init();
+    if(Game.active_scene) Game.active_scene.Init();
     __FRAME(0,true);
 }
 
@@ -19,16 +19,16 @@ class Scene {
     static_collision_map = []; // Collision 2d array for static collisions
     static_col_resolution = 16; // Pixels per collision index
 
-	/// Custom init code
-    init() {};
+	/// Custom Init code
+    Init() {};
 
-	/// Custom update code
-    update() {};
+	/// Custom Update code
+    Update() {};
 
     /// If this scene has unique logic when loading the next scene
-    on_transfer(old_scene) {};
+    OnTransfer(old_scene) {};
 
-    on_destroy()
+    OnDestroy()
     {
         DESTROY_ALL(true, false);
     }
