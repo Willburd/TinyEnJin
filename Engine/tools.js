@@ -37,6 +37,9 @@ const PointInsideRectangle = (x,y,tlx,tly,brx,bry) => {
 
 /// If any point of a rectangle is within the bounds of the other rectangle, return true.
 const rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
+    let center_x = tlx + ((brx - tlx)*0.5);
+    let center_y = tly + ((bry - tly)*0.5);
+    if(PointInsideRectangle(center_x,center_y,tlx2,tly2,brx2,bry2)) return true; // Center
     if(PointInsideRectangle(tlx,tly,tlx2,tly2,brx2,bry2)) return true; // TL
     if(PointInsideRectangle(brx,tly,tlx2,tly2,brx2,bry2)) return true; // TR
     if(PointInsideRectangle(tlx,bry,tlx2,tly2,brx2,bry2)) return true; // BL
@@ -46,7 +49,7 @@ const rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
 
 /// If any points of a rectangle are within the radius of the circle, return true
 const rectangle_inside_circle = (tlx,tly,brx,bry,cx,cy,rad) => {
-    if(PointInsideRectangle(cx,cy,tlx,tly,brx,bry)) return true;
+    if(PointInsideRectangle(cx,cy,tlx,tly,brx,bry)) return true; // Center
     if(PointInsideCircle(tlx,tly,cx,cy,rad)) return true; // TL
     if(PointInsideCircle(brx,tly,cx,cy,rad)) return true; // TR
     if(PointInsideCircle(tlx,bry,cx,cy,rad)) return true; // BL
