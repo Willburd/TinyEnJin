@@ -1,3 +1,6 @@
+
+let entities_created = 0;
+
 class Entity 
 {
 	// Internal
@@ -35,6 +38,7 @@ class Entity
 		this.x = start_x;
 		this.y = start_y;
 		Game.active_game.init_queue.push(this);
+		entities_created++;
 	}
 
 	// Custom init

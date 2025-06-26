@@ -1,3 +1,5 @@
+let entities_destroyed = 0;
+
 /// Destroy an entity
 const DESTROY = (ent,unloading = false) => {
     if(ent.__destroyed)
@@ -13,6 +15,7 @@ const DESTROY = (ent,unloading = false) => {
     ent.__destroyed = true;
     ent.__canvas = null;
     delete ent;
+    entities_destroyed++;
 };
 
 /// Destroy all entities
