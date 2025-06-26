@@ -16,6 +16,9 @@ class Scene {
     view_x = 0;
     view_y = 0;
 
+    static_collision_map = []; // Collision 2d array for static collisions
+    static_col_resolution = 16; // Pixels per collision index
+
 	/// Custom init code
     init() {};
 

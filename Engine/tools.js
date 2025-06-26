@@ -65,7 +65,7 @@ const circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
 
 /// If a point is inside the game's view. A padding may be specified.
 const point_inside_view = (x,y,pad) => {
-    return point_inside_rectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + main_canvas.width + pad, Game.active_scene.view_y + main_canvas.height + pad);
+    return point_inside_rectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + view_width() + pad, Game.active_scene.view_y + view_height() + pad);
 }
 
 /// If a point is outside the game's view. A padding may be specified.
@@ -103,6 +103,14 @@ const angle_to_index = (angle, max_index) => {
 // Drawing sprites
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/// Get the width or height of the game's viewport
+const view_width = () => {
+    return main_canvas.width
+}
+const view_height = () => {
+    return main_canvas.height
+}
+
 const draw_entity = (ent) =>
 {
     __DRAWSPRITE(ent.__canvas,ent.sprite,ent.frame,
@@ -137,4 +145,25 @@ const animation_length = (spr) => {
 const set_blend_mode = (new_mode = BLENDMODE_SOURCEOVER) =>
 {
 	context.globalCompositeOperation = new_mode;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Math and RNG
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const lerp = (start, end, percent) =>
+{
+    return (start * (1 - percent)) + (end * percent);
+}
+
+/// Gets a random number within the range provided
+const rand = (start, end) =>
+{
+    return lerp(start, end, Math.random());
+}
+
+/// returns true if rng rolls a value under the 0 to 100% percent argument.
+const prob = (percent) =>
+{
+    return (Math.random() * 100) < percent;
 }

@@ -8,8 +8,11 @@ const DESTROY = (ent,unloading = false) => {
 	// Cleanup
     ent.on_destroy(unloading);
     ent.id = -1;
+    if(ent.collider != null) delete ent.collider;
+    ent.collider = null;
     ent.__destroyed = true;
     ent.__canvas = null;
+    delete ent;
 };
 
 /// Destroy all entities

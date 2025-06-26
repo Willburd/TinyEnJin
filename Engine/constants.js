@@ -2,7 +2,8 @@ const ENTITY_CAP = 60; //2048; (Use lower to catch memory leaks)
 const RENDER_WARNING_LIMIT = 256; // Amount of sprites that can be drawn per frame before it starts giving warnings
 
 const BACKGROUND_LAYER = -99999;
-const DRAW_COLLIDERS = true;
+const DRAW_COLLIDERS = false;
+const DRAW_STATIC_COLLIDERS = true;
 
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;

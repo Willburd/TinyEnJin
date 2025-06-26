@@ -1,6 +1,6 @@
 const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 	all_colliders.forEach(clu => {
-		if(clu != caller)
+		if(clu != caller && caller != null && !caller.__destroyed && !clu.__destroyed && caller.collider != null)
 		{
 			if(caller.collider.check_collider(caller,clu)) caller.on_collision(clu);
 		}

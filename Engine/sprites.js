@@ -107,8 +107,8 @@ const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, a
 					, 0																// sy
 					, wid															// swidth
 					, hig 															// sheight
-					, (vx * Math.sign(xscale)) + (align_h * xscale) + xscale_off	// dx
-					, (vy * Math.sign(yscale)) + (align_v * yscale) + yscale_off	// dy
+					, Math.floor((vx * Math.sign(xscale)) + (align_h * xscale) + xscale_off)	// dx
+					, Math.floor((vy * Math.sign(yscale)) + (align_v * yscale) + yscale_off)	// dy
 					, (wid * Math.abs(xscale))										// dwidth
 					, (hig * Math.abs(yscale)));									// dheight
 
