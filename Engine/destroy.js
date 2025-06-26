@@ -20,8 +20,28 @@ const DESTROY = (ent,unloading = false) => {
 
 /// Destroy all entities
 const DESTROY_ALL = (unloading,forced) => {
+    let new_list = [];
 	Game.active_game.all_entities.forEach(element => {
-		if(element != null && !element.__destroyed && (!element.PERSISTANT || forced)) DESTROY(element,unloading);
+        if(element != null && !element.__destroyed)
+        {
+            if(!element.PERSISTANT || forced)
+            {
+                DESTROY(element,unloading);
+            }
+            else
+            {
+                new_list.push(element);
+            }
+        }
 	});
-	Game.active_game.recently_free_slots = []; // Purge
+    // Wipe prior list state
+    REFRESH_ENTITY_LIST(new_list);
 };
+
+/// Refreshes entity list with the new list. Safely refreshes cached open slots too.
+const REFRESH_ENTITY_LIST = (new_list) => {
+    console.log("Refreshed entity list. " + Game.active_game.all_entities.length + " => " + new_list.length + " Diff: " + Math.abs(new_list.length - Game.active_game.all_entities.length));
+    Game.active_game.all_entities.length = 0;
+    Game.active_game.all_entities = new_list;
+    Game.active_game.recently_free_slots = [];
+}

@@ -28,18 +28,22 @@ document.addEventListener('keyup', (e) => pressedKeys.delete(e.key.toLowerCase()
 // Frame render loop. Where the game ACTUALLY updates. But much more often renders...
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const __FRAME = (currentTimeMs, forced) => {
-    const deltaTimeMs = currentTimeMs - Game.active_game.previousTimeMs;
-    if (deltaTimeMs >= Game.active_game.FRAME_INTERVAL_MS || forced) {
-        Game.active_game.__PROCESS();
-        const offset = deltaTimeMs % Game.active_game.FRAME_INTERVAL_MS;
-        Game.active_game.previousTimeMs = currentTimeMs - offset;
-    }
+	// This loop goes on forever by requesting it to trigger next browser frame.
+	// This is not recursive, as it's schedualing a call instead of just calling.
+	requestAnimationFrame(__FRAME);
+	if(!document.hasFocus()) return;
+	// Requires focus to play, or GC gets really unhappy
+	const deltaTimeMs = currentTimeMs - Game.active_game.previousTimeMs;
+	if (deltaTimeMs >= Game.active_game.FRAME_INTERVAL_MS || forced) {
+		Game.active_game.__PROCESS();
+		const offset = deltaTimeMs % Game.active_game.FRAME_INTERVAL_MS;
+		Game.active_game.previousTimeMs = currentTimeMs - offset;
+	}
 	if(Game.active_scene != null)
 	{
 		let rendered_ents = __RENDER();
 		if(rendered_ents >= RENDER_WARNING_LIMIT) console.error("EXCESSIVE ENTITY RENDERING: " + rendered_ents);
 	}
-	requestAnimationFrame(__FRAME);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,6 +122,7 @@ class Game
 		this.depth_sort = [];
 		if(this.all_entities.length > 0)
 		{
+			let new_list = []; // Removing nulls
 			this.all_entities.forEach(enu => {
 				// Update early event
 				if(enu != null && !enu.__destroyed)
@@ -156,10 +161,16 @@ class Game
 							// prepare to resolve collisions
 							all_colliders.push(enu);
 						}
+						// Still exists, place is regnerated list
+						new_list.push(enu);
 					}
 				}
 			});
+			// Removes nulls by only adding objects that survived to the new loop.
+			// Only does this if there is a significant amount of nulls in the list
+			if(Math.abs(Game.active_game.all_entities.length - new_list.length) >= ENTITY_LIST_REFRESH_THRESHOLD) REFRESH_ENTITY_LIST(new_list);
 		}
+		
 		if(all_colliders.length > 0)
 		{
 			all_colliders.forEach(clu => {

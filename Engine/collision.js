@@ -1,6 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Dynamic collisions
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
+	// Dynamic collisions. Static collisions are handled in Update() manually.
+	if(caller == null) return;
+	if(all_colliders.length <= 1) return;
 	all_colliders.forEach(clu => {
-		if(clu != caller && caller != null && !caller.__destroyed && !clu.__destroyed && caller.collider != null)
+		if(clu != caller && !caller.__destroyed && !clu.__destroyed && caller.collider != null)
 		{
 			if(caller.collider.CheckCollider(caller,clu)) caller.OnCollision(clu);
 		}
@@ -137,4 +144,49 @@ class ColliderRectangle extends ColliderPoint
 class ColliderCircle extends ColliderPoint
 {
 	collider_type = COLLIDERTYPE_CIRCLE;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static collision map
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Gets the static collision data of a point in the world
+const GetStaticCollision = (x,y) =>
+{
+	if(Game.active_scene == null || Game.active_scene.static_collision_map.length <= 0) return 0;
+	if(y >= Game.active_scene.static_collision_map.length) return 0;
+	let submap = Game.active_scene.static_collision_map[y];
+	if(submap == null || submap.length <= 0) return 0;
+	if(x >= submap.length) return 0;
+	return submap[x];
+}
+
+/// Draws the static collision array, useful for testing tilesets, but too laggy to be used in actual gameplay.
+const DrawStaticColliders = () => {
+	if(Game.active_scene.static_collision_map.length > 0)
+	{
+		for (let yy = 0; yy < Game.active_scene.static_collision_map.length; yy++) {
+			let submap = Game.active_scene.static_collision_map[yy];
+			if(submap != null && submap.length == 0) break;
+			for (let xx = 0; xx < submap.length; xx++) {
+				if(submap[xx] == 0) continue;
+
+				let xpos = (xx * Game.active_scene.static_col_resolution) - Game.active_scene.view_x;
+				let ypos = (yy * Game.active_scene.static_col_resolution) - Game.active_scene.view_y;
+
+				ctx.beginPath();
+				ctx.rect(xpos,
+						ypos,
+						Game.active_scene.static_col_resolution,
+						Game.active_scene.static_col_resolution);
+				ctx.fillStyle = "#ff0000BB";
+				ctx.fill();
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#00eeffBB";
+				ctx.stroke();
+				ctx.fillStyle = "#ffffffBB";
+				ctx.fillText(submap[xx], xpos , ypos + Game.active_scene.static_col_resolution, Game.active_scene.static_col_resolution);
+			}
+		} 
+	}
 }

@@ -5,6 +5,7 @@ const START_SCENE = (new_scene) =>
     {
         old_scene.OnDestroy();
         if(new_scene != null) new_scene.OnTransfer(old_scene);
+        delete old_scene;
     }
     Game.active_scene = new_scene;
     if(Game.active_scene) Game.active_scene.Init();

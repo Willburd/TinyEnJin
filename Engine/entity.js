@@ -15,6 +15,8 @@ class Entity
 	y = 0;
 	start_x = 0;
 	start_y = 0;
+	prev_x = 0;
+	prev_y = 0;
 	depth = 0;		// Draw depth, higher numbers Draw closer to the screen
 	collider = null;
 
@@ -40,6 +42,8 @@ class Entity
 		this.y = start_y;
 		this.start_x = start_x;
 		this.start_y = start_y;
+		this.prev_x = start_x;
+		this.prev_y = start_y;
 		Game.active_game.init_queue.push(this);
 		entities_created++;
 	}
@@ -91,6 +95,8 @@ class GameObj extends Entity
 	__INTERNAL_UPDATE()
 	{
 		super.__INTERNAL_UPDATE();
+		this.prev_x = this.x;
+		this.prev_y = this.y;
 		this.x += this.SPEED.x;
 		this.y += this.SPEED.y;
 		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.x,this.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
