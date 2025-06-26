@@ -11,9 +11,10 @@ class Entity
 	// Core
 	ent_name = "";
 	id = 0;
-	position = {x:0, y:0};
 	x = 0;
 	y = 0;
+	start_x = 0;
+	start_y = 0;
 	depth = 0;		// Draw depth, higher numbers draw closer to the screen
 	collider = null;
 
@@ -37,6 +38,8 @@ class Entity
 		this.__canvas = ctx;
 		this.x = start_x;
 		this.y = start_y;
+		this.start_x = start_x;
+		this.start_y = start_y;
 		Game.active_game.init_queue.push(this);
 		entities_created++;
 	}
@@ -73,6 +76,11 @@ class Entity
 
 	/// Triggers each time the animation loop reaches the length of it's animation. Only for built in animation_speed.
 	on_animation_loop() {};
+
+	/// Get the current x and y as a vector
+	get_position() {
+		return {x: this.x, y: this.y};
+	};
 }
 
 class GameObj extends Entity 

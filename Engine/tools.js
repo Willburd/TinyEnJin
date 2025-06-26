@@ -77,9 +77,15 @@ const point_outside_view = (x,y,pad) => {
 // Direction
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Get the angle from point1 to point2 in degrees. 
-const point_angle = (x1,y1,x2,y2) => {
-    return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+/// Get the angle from point1 to point2 in degrees from 0 to 360.
+const find_angle = (x1,y1,x2,y2) => {
+    return (360 + (Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI)) % 360; // ALWAYS positive!
+}
+
+/// Returns an angle from 0 to 360 from the position to the entity's x/y. If it is unable to find an angle it will return -1
+const angle_to = (x,y,ent) => {
+    if(ent == null) return -1;
+    return find_angle(x,y,ent.x,ent.y); 
 }
 
 /// Get a new position from an angle and distance specified.
@@ -160,6 +166,12 @@ const lerp = (start, end, percent) =>
 const rand = (start, end) =>
 {
     return lerp(start, end, Math.random());
+}
+
+/// Gets a random angle from 0 to 360
+const random_dir = () =>
+{
+    return rand(0,360);
 }
 
 /// returns true if rng rolls a value under the 0 to 100% percent argument.
