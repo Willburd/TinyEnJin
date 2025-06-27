@@ -4,7 +4,7 @@ const ENTITY_LIST_REFRESH_THRESHOLD = 20 // Amount of nulls in the entity proces
 
 const BACKGROUND_LAYER = -99999;
 const DRAW_COLLIDERS = false;
-const DRAW_STATIC_COLLIDERS = true;
+const DRAW_STATIC_COLLIDERS = false;
 
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
