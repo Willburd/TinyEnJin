@@ -3,7 +3,7 @@ const RENDER_WARNING_LIMIT = 256; // Amount of sprites that can be drawn per fra
 const ENTITY_LIST_REFRESH_THRESHOLD = 20 // Amount of nulls in the entity processing list that triggers a rebuild
 
 const BACKGROUND_LAYER = -99999;
-const DRAW_COLLIDERS = false;
+const DRAW_COLLIDERS = true;
 const DRAW_STATIC_COLLIDERS = false;
 
 const COLLIDERTYPE_POINT = 0;

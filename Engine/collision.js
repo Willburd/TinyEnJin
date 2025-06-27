@@ -24,15 +24,14 @@ class ColliderPoint
 {
 	collider_type = COLLIDERTYPE_POINT;
 	
-	offset_x = 0;
-	offset_y = 0;
+	offset = new Vector2(0,0);
 	width = 0;
 	height = 0;
 
 	constructor(xoff,yoff,wid,hig)
 	{
-		this.offset_x = xoff;
-		this.offset_y = yoff;
+		this.offset.x = xoff;
+		this.offset.y = yoff;
 		if(wid != undefined) this.width = wid;
 		if(hig != undefined) this.height = hig;
 	}
@@ -44,11 +43,11 @@ class ColliderPoint
 	*/
 	CheckCollider(owner,other)
 	{
-		let x = owner.x + owner.collider.offset_x;
-		let y = owner.y + owner.collider.offset_y;
+		let x = owner.position.x + owner.collider.offset.x;
+		let y = owner.position.y + owner.collider.offset.y;
 
-		let otherx = other.x + other.collider.offset_x;
-		let othery = other.y + other.collider.offset_y;
+		let otherx = other.position.x + other.collider.offset.x;
+		let othery = other.position.y + other.collider.offset.y;
 
 		// If we're not in this range don't bother with anything more complex
 		if(!PointInsideCircle(x,y,otherx,othery, (owner.collider.width + owner.collider.height + other.collider.width + other.collider.height) )) return false;
@@ -113,8 +112,8 @@ class ColliderPoint
 	*/
 	DrawCollider(owner)
 	{
-		let x = owner.x + this.offset_x - Game.active_scene.view_x;
-		let y = owner.y + this.offset_y - Game.active_scene.view_y;
+		let x = owner.position.x + this.offset.x - Game.active_scene.view_x;
+		let y = owner.position.y + this.offset.y - Game.active_scene.view_y;
 
 		switch(this.collider_type)
 		{

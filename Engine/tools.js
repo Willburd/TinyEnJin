@@ -10,10 +10,10 @@
 * @param {number} tly - top left y boundary.
 * @param {number} brx - bottom right x boundary.
 * @param {number} bry - bottom right y boundary.
-* @returns {object{x: number, y: number}}
+* @returns {Vector2}
 */
 const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
-    let pr = {x: x, y: y};
+    let pr = new Vector2(x,y);
     if(x < tlx) pr.x = tlx;
     if(x > brx) pr.x = brx;
     if(y < tly) pr.y = tly;
@@ -28,12 +28,12 @@ const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
 * @param {number} tly - top left y boundary.
 * @param {number} brx - bottom right x boundary.
 * @param {number} bry - bottom right y boundary.
-* @returns {object{x: number, y: number}}
+* @returns {Vector2}
 */
 const ConstrainEntity = (ent,tlx,tly,brx,bry) => {
-    let pr = ConstrainPoint(ent.x,ent.y,tlx,tly,brx,bry);
-    ent.x = pr.x;
-    ent.y = pr.y;
+    let pr = ConstrainPoint(ent.position.x,ent.position.y,tlx,tly,brx,bry);
+    ent.position = pr;
+    return pr;
 }
 
 /**
@@ -189,6 +189,16 @@ const FindAngle = (x1,y1,x2,y2) => {
 }
 
 /**
+* Get the angle from point1 to point2 in degrees from 0 to 360.
+* @param {Vector2} vec1 - First point's position.
+* @param {Vector2} vec2 - Second point's position.
+* @returns {number} Angle from the first point to the second in degrees.
+*/
+const FindVectorAngle = (vec1, vec2) => {
+    return FindAngle(vec1.x,vec1.y,vec2.x,vec2.y);
+}
+
+/**
 * Returns an angle from 0 to 360 from the position to the entity's x/y. 
 * @param {number} x1 - First point's x position.
 * @param {number} y1 - First point's y position.
@@ -197,18 +207,18 @@ const FindAngle = (x1,y1,x2,y2) => {
 */
 const AngleTo = (x,y,ent) => {
     if(ent == null) return -1;
-    return FindAngle(x,y,ent.x,ent.y); 
+    return FindAngle(x,y,ent.position.x,ent.position.y); 
 }
 
 /**
 * Get a new position from an angle and distance specified.
 * @param {number} angle - The angle that will be used to calculate the new position.
 * @param {number} distance - The distance to move along the angle provided.
-* @returns {object{x:number,y:number}}
+* @returns {Vector2}
 */
 const MoveToward = (angle,distance) => {
     let dir = angle / (180 / Math.PI);
-    return {x: Math.cos(dir) * distance, y: Math.sin(dir) * distance}
+    return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
 }
 
 /**
@@ -259,11 +269,11 @@ const ViewHeight = () => {
 const DrawEntity = (ent) =>
 {
     __DRAWSPRITE(ent.__canvas,ent.sprite,ent.frame,
-                ent.x,
-                ent.y,
+                ent.position.x,
+                ent.position.y,
                 ent.image_alpha,
                 ent.image_xscale,ent.image_yscale,
-                ent.align_h,ent.align_v,
+                ent.sprite_align.x,ent.sprite_align.y,
                 ent.image_angle);
 }
 

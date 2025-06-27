@@ -11,12 +11,9 @@ class Entity
 	// Core
 	ent_name = "";
 	id = 0;
-	x = 0;
-	y = 0;
-	start_x = 0;
-	start_y = 0;
-	prev_x = 0;
-	prev_y = 0;
+	position = new Vector2(0,0);
+	start_position = new Vector2(0,0);
+	prev_position = new Vector2(0,0);
 	depth = 0;		// Draw depth, higher numbers Draw closer to the screen
 	collider = null;
 
@@ -25,8 +22,7 @@ class Entity
 	visible = true;
 	image_xscale = 1;
 	image_yscale = 1;
-	align_v = 0;	// Center offset of sprite x
-	align_h = 0;	// Center offset of sprite y
+	sprite_align = new Vector2(0,0); // Center offset of sprite
 	image_angle = 0; // rotation in degrees to Draw at
 	image_alpha = 1; // Transparency, with 1 being fully opaque
 
@@ -44,12 +40,9 @@ class Entity
 	{
 		// Onto creation!
 		this.__canvas = ctx;
-		this.x = start_x;
-		this.y = start_y;
-		this.start_x = start_x;
-		this.start_y = start_y;
-		this.prev_x = start_x;
-		this.prev_y = start_y;
+		this.position = new Vector2(start_x,start_y);
+		this.start_position = new Vector2(start_x,start_y);
+		this.prev_position = new Vector2(start_x,start_y);
 		Game.active_game.init_queue.push(this);
 		entities_created++;
 	}
@@ -125,29 +118,19 @@ class Entity
 	* @returns {null}
 	*/
 	OnAnimationLoop() {};
-
-	/**
-	* Get the current x and y as a vector
-	* @returns {object{x:number,y:number}}
-	*/
-	GetPosition() {
-		return {x: this.x, y: this.y};
-	};
 }
 
 class GameObj extends Entity 
 {
-	SPEED = {x: 0, y: 0}; // Automatic x/y movement, does not handle collision(yet?)
+	SPEED = new Vector2(0,0); // Automatic x/y movement, does not handle collision(yet?)
 	VIEW_EDGE_LIMIT = -1; // If above 0, will be destroyed if it goes outside of the view + this as padding
 
 	__INTERNAL_UPDATE()
 	{
 		super.__INTERNAL_UPDATE();
-		this.prev_x = this.x;
-		this.prev_y = this.y;
-		this.x += this.SPEED.x;
-		this.y += this.SPEED.y;
-		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.x,this.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
+		this.prev_position = this.position.Copy();
+		this.position.Merge(this.SPEED);
+		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.position.x,this.position.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
 	};
 }
 

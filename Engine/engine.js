@@ -208,3 +208,52 @@ class Game
 		return processed_ents;
 	}
 }
+
+class Vector2 {
+	x = 0;
+	y = 0;
+
+	constructor(xx,yy)
+	{
+		this.x = xx;
+		this.y = yy;
+	}
+
+	/** 
+	* @param {Vector2} vector 
+	* @returns {Vector2} A new vector based on the original vector added with the provided vector
+	*/
+	Add(vector){
+		return new Vector2(this.x + vector.x,this.y + vector.y);
+	}
+	
+	/** 
+	* @param {Vector2} vector - Adds the provided vector into the current vector directly.
+	*/
+	Merge(vector){
+		this.x += vector.x;
+		this.y += vector.y;
+	}
+
+	/** 
+	* @param {Vector2} vector 
+	* @returns {Boolean} If the provided vector is equal to this vector.
+	*/
+	Equals(vector){
+		return this.x === vector.x && this.y === vector.y;
+	}
+
+	/** 
+	* @returns {Vector2} Copy of the current vector.
+	*/
+	Copy(){
+		return new Vector2(this.x,this.y);
+	}
+	
+	/** 
+	* @returns {Vector2} An inverse copy of the current vector.
+	*/
+	Inverse(){
+		return new Vector2(-this.x,-this.y);
+	}
+}
