@@ -4,6 +4,10 @@ let ctx;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Render setup and context creation
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* Constructs the render context from the canvas.
+* @returns {null}
+*/
 const __CREATE_RENDER_CONTEXT = () =>
 {
 	// Get the canvas from the webpage. Complains if it cannot, but if it fails you have worse to worry about.
@@ -12,6 +16,10 @@ const __CREATE_RENDER_CONTEXT = () =>
 	if (!ctx) console.error("Failed to get the rendering context for 2D canvas");
 }
 
+/**
+* Renders each frame based on data in the game's current depth_sort array.
+* @returns {number} The number of entities rendered this frame
+*/
 const __RENDER = () => {
 	// Clear canvas
 	ctx.clearRect(0, 0, main_canvas.width, main_canvas.height);

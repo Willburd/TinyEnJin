@@ -1,6 +1,11 @@
 let entities_destroyed = 0;
 
-/// Destroy an entity
+/**
+* Destroy an entity
+* @param {Entity} ent - Entity being destroyed
+* @param {boolean} unloading - Special condition for unloading. Useful if you don't want to spawn effects when an object is unloaded, vs destroyed in some other way like gameplay.
+* @returns {null}
+*/
 const DESTROY = (ent,unloading = false) => {
     if(ent.__destroyed)
         return
@@ -18,7 +23,12 @@ const DESTROY = (ent,unloading = false) => {
     entities_destroyed++;
 };
 
-/// Destroy all entities
+/**
+* Destroy all entities
+* @param {boolean} unloading - Special condition for unloading. Useful if you don't want to spawn effects when an object is unloaded, vs destroyed in some other way like gameplay.
+* @param {boolean} forced - Forces all entities to be destroyed, including ones protected by PERSISTANT being true.
+* @returns {null}
+*/
 const DESTROY_ALL = (unloading,forced) => {
     let new_list = [];
 	Game.active_game.all_entities.forEach(element => {
@@ -38,7 +48,11 @@ const DESTROY_ALL = (unloading,forced) => {
     REFRESH_ENTITY_LIST(new_list);
 };
 
-/// Refreshes entity list with the new list. Safely refreshes cached open slots too.
+/**
+* Refreshes entity list with a new list. Safely refreshes cached open slots too.
+* @param {Array<Entity>} new_list - List that will become the new processing list once cleanup completes.
+* @returns {null}
+*/
 const REFRESH_ENTITY_LIST = (new_list) => {
     console.log("Refreshed entity list. " + Game.active_game.all_entities.length + " => " + new_list.length + " Diff: " + Math.abs(new_list.length - Game.active_game.all_entities.length));
     Game.active_game.all_entities.length = 0;

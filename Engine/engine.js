@@ -7,7 +7,10 @@ window.addEventListener("load", () => {
 	__CREATE_RENDER_CONTEXT();
 	__INTERNAL_LOADING();
 })
-// Load assets, makes sure everything gets done instead of blindly trusting!
+/**
+* Load assets, makes sure everything gets done instead of blindly trusting the page to be loaded instantly!
+* @returns {null}
+*/
 const __INTERNAL_LOADING = () => {
 	if(__IMGS_TOTAL > 0) console.log("Loading progress: " + __LOAD_PROGRESS());
 	if(__IMGS_ERR > 0) 
@@ -27,9 +30,14 @@ document.addEventListener('keyup', (e) => pressedKeys.delete(e.key.toLowerCase()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Frame render loop. Where the game ACTUALLY updates. But much more often renders...
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+* This loop goes on forever by requesting it to trigger next browser frame. This is not recursive, as it's schedualing a call instead of just calling.
+* @param {number} currentTimeMs - The current requestAnimationFrame time that the frame is being called with. Used in deltatime calculation.
+* @param {boolean} forced - If this function is called manually, this will need to be set to true to ignore deltatime likely missing the update tick.
+* @returns {null}
+*/
 const __FRAME = (currentTimeMs, forced) => {
-	// This loop goes on forever by requesting it to trigger next browser frame.
-	// This is not recursive, as it's schedualing a call instead of just calling.
 	requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
 	// Requires focus to play, or GC gets really unhappy
@@ -68,7 +76,10 @@ class Game
 	view_x = 0;
 	view_y = 0;
 
-	/// Starts game and begins Update loop
+	/**
+	* Starts game and begins Update loop
+	* @returns {null}
+	*/
 	__START() {
 		this.FRAME_INTERVAL_MS = 1000 / 60;
 		if(Game.active_game != null)
@@ -82,18 +93,34 @@ class Game
 		return 1;
 	};
 
+	/**
+	* Ends game and destroys all scenes and entities
+	* @returns {null}
+	*/
 	__STOP() {
 		END_SCENE();
 		DESTROY_ALL(TRUE,TRUE);
 		active_game = null
 	}
 
-	/// Custom Init code
+	/**
+	* Custom Init code. Can be safely overridden.
+	* @returns {null}
+	*/
     Init() {
-		return 1;
+		return;
 	};
 
-	/// Update game state
+	/**
+	* Custom Update code. Can be safely overridden.
+	* @returns {null}
+	*/
+    Update() {};
+
+	/**
+	* Core game update function. All entities process here.
+	* @returns {number} The number of entities that exist by the end of the frame.
+	*/
     __PROCESS() {
 		// Create pending objects
 		while(this.init_queue.length) {
@@ -180,7 +207,4 @@ class Game
 		}
 		return processed_ents;
 	}
-
-	/// Custom Update code
-    Update() {};
 }

@@ -1,3 +1,7 @@
+/**
+* Required function that creates an instance of your game's class, and starts it up. Your game must define this itself.
+* @returns {null}
+*/
 const __SETUP = () => {
     let gm = new TemplateGame();
     gm.__START();

@@ -2,6 +2,12 @@
 // Dynamic collisions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Internal collision resolution
+ * @param {Entity} caller
+ * @param {Array<Entity>} all_colliders
+ * @returns {null}
+ */
 const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 	// Dynamic collisions. Static collisions are handled in Update() manually.
 	if(caller == null) return;
@@ -31,6 +37,11 @@ class ColliderPoint
 		if(hig != undefined) this.height = hig;
 	}
 
+	/**
+	* @param {Entity} owner
+	* @param {Entity} other
+	* @returns {boolean}
+	*/
 	CheckCollider(owner,other)
 	{
 		let x = owner.x + owner.collider.offset_x;
@@ -96,6 +107,10 @@ class ColliderPoint
 		}
 	}
 
+	/**
+	* @param {Entity} owner
+	* @returns {null}
+	*/
 	DrawCollider(owner)
 	{
 		let x = owner.x + this.offset_x - Game.active_scene.view_x;
@@ -150,7 +165,12 @@ class ColliderCircle extends ColliderPoint
 // Static collision map
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Gets the static collision data of a point in the world
+/**
+* Gets the static collision data of a point in the world
+* @param {number} x
+* @param {number} y
+* @returns {any}
+*/
 const GetStaticCollision = (x,y) =>
 {
 	if(Game.active_scene == null || Game.active_scene.static_collision_map.length <= 0) return 0;
@@ -161,7 +181,10 @@ const GetStaticCollision = (x,y) =>
 	return submap[x];
 }
 
-/// Draws the static collision array, useful for testing tilesets, but too laggy to be used in actual gameplay.
+/**
+* Draws the static collision array, useful for testing tilesets, but too laggy to be used in actual gameplay.
+* @returns {null}
+*/
 const DrawStaticColliders = () => {
 	if(Game.active_scene.static_collision_map.length > 0)
 	{

@@ -1,6 +1,9 @@
 let sprite_data = {};
 
-/// Load all assets
+/**
+* Handles loading assets. If no assets have been flagged for loading, call setup functions to start loading.
+* @returns {boolean} If all assets have been loaded.
+*/
 const __LOAD_ASSETS = () =>
 {   
 	if(__IMGS_TOTAL == 0)
@@ -12,6 +15,10 @@ const __LOAD_ASSETS = () =>
 	// Waiting for setup, return true or false if all assets are loaded
 	return __LOAD_PROGRESS() == 1;
 }
+/**
+* Gets progress of asset loading.
+* @returns {number} Percent from 0 to 1
+*/
 const __LOAD_PROGRESS = () =>
 {
 	return __IMGS_LOADED / __IMGS_TOTAL;
@@ -21,6 +28,11 @@ const __LOAD_PROGRESS = () =>
 let __IMGS_TOTAL = 0;
 let __IMGS_LOADED = 0;
 let __IMGS_ERR = 0;
+
+/**
+* Constructs the sprite library from all images on the page.
+* @returns {null}
+*/
 const __INIT_SPRITE_LIBRARY = () =>
 {
 	const all_images = document.getElementsByTagName("img");
@@ -31,13 +43,18 @@ const __INIT_SPRITE_LIBRARY = () =>
 	}
 }
 
+/**
+* Handles loading state of html images, passing them to __LOAD_IMG_FINALIZE() when they are ready for processing.
+* @param {Element} img - Html img element
+* @returns {null}
+*/
 const __INIT_SPRITE = (img) =>
 {
-	if(img.complete) 
+	if(img.complete) // Was ready before the script called it.
 	{
 		__LOAD_IMG_FINALIZE(img);
 	}
-	else
+	else // Needs time to load still...
 	{
 		img.onload = (img) => {__LOAD_IMG_FINALIZE(img)};
 		img.onerror = () => {__IMGS_ERR++;};
@@ -45,6 +62,11 @@ const __INIT_SPRITE = (img) =>
 	}
 }
 
+/**
+* Converts a html img element into sprite data for use in the game.
+* @param {Element} img - Html img element
+* @returns {null}
+*/
 const __LOAD_IMG_FINALIZE = (img) =>
 {
 	let nm = img.id;
@@ -57,6 +79,21 @@ const __LOAD_IMG_FINALIZE = (img) =>
 	__IMGS_LOADED++;
 }
 
+/**
+* Draws a sprite to the context specified with various arguments to change its appearance.
+* @param {Canvas} context - Canvas context to draw to.
+* @param {string} spr - text ID of the sprite to draw.
+* @param {number} frame - Frame index of an animation. Loops if a number larger than the animation length is provided.
+* @param {number} x - The x position to draw the sprite.
+* @param {number} y - The y position to draw the sprite.
+* @param {number} alpha - A percent between 0 and 1 that controls the transparency of the sprite being drawn. Defaults to 1.
+* @param {number} xscale - The x scale multiplier. Defaults to 1.
+* @param {number} yscale - The y scale multiplier. Defaults to 1.
+* @param {number} align_h - The x offset of the sprite, from the object's x position.
+* @param {number} align_v - The y offset of the sprite, from the object's y position.
+* @param {number} angle - The angle the sprite is drawn at. (CURRENTLY WIP)
+* @returns {null}
+*/
 const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, align_h = 0,align_v = 0,angle = 0) =>
 {
 	if(context == undefined || spr == "" || xscale == 0 || yscale == 0) 

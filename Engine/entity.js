@@ -34,6 +34,12 @@ class Entity
 	animation_speed = 0;
 	frame = 0;
 
+	/**
+	* Initilizes the entity to a base state.
+	* @param {number} start_x - Entity's initial x position
+	* @param {number} start_y - Entity's initial y position
+	* @returns {null}
+	*/
 	constructor(start_x,start_y) 
 	{
 		// Onto creation!
@@ -48,11 +54,21 @@ class Entity
 		entities_created++;
 	}
 
-	// Custom Init
+	/**
+	* Custom Init code. Can be safely overridden.
+	* @returns {null}
+	*/
 	OnInit() {};
-
-	// Custom Update, in order
+	
+	/**
+	* Custom early update code. Can be safely overridden. Happens before an entity runs __INTERNAL_UPDATE();
+	* @returns {null}
+	*/
 	EarlyUpdate() {};
+	/**
+	* Entity internal update. Handles processing of automatically adjusted vars, or functions called by an entity's state.
+	* @returns {null}
+	*/
 	__INTERNAL_UPDATE() 
 	{
 		let len = AnimationLength(this.sprite)
@@ -60,28 +76,60 @@ class Entity
 		this.frame += this.animation_speed;
 		if(this.animation_speed > 0 && len > 0 && (Math.abs(this.frame) % len) <= (Math.abs(frame_before) % len)) this.OnAnimationLoop();
 	};
+	/**
+	* Custom update code. Can be safely overridden.
+	* @returns {null}
+	*/
 	Update() {};
+	/**
+	* Custom late update code. Can be safely overridden.
+	* @returns {null}
+	*/
 	LateUpdate() {};
 
-	// Collision behavior
+	/**
+	* Collision behavior. Called when a collider overlaps with another collider at the end of a frame. This is checked after all objects have been processed.
+	* @param {Entity} other - Other entity involved in the collision. Use "other instanceof ClassTypeHere" to identify specific entity types for complex logic. 
+	* @returns {null}
+	*/
 	OnCollision(other) {};
 
-	// Custom Draw, in order
+	
+	/**
+	* Custom early draw code. Can be safely overridden.
+	* @returns {null}
+	*/
 	EarlyDraw() {};
+	/**
+	* Custom draw code. Can be safely overridden. By default, it will draw the current sprite at the current x and y position. Use the depth variable to change an entity's draw order in relation to other entities.
+	* @returns {null}
+	*/
 	Draw()
 	{
 		DrawEntity(this);
 	};
-	LateDraw() {
-	};
+	/**
+	* Custom late draw code. Can be safely overridden.
+	* @returns {null}
+	*/
+	LateDraw() {};
 
-	/// Custom cleanup, unloading is set during DESTROY_ALL or if outside of view edge and can be used to hid destruction effects, etc.
+	/**
+	* Custom cleanup, unloading is set during DESTROY_ALL or if outside of view edge and can be used to hid destruction effects, etc. Can be safely overridden.
+	* @returns {null}
+	*/
 	OnDestroy(unloading) {};
 
-	/// Triggers each time the animation loop reaches the length of it's animation. Only for built in animation_speed.
+	/**
+	* Triggers each time the animation loop reaches the length of it's animation. Only for built in animation_speed. Can be safely overridden.
+	* @returns {null}
+	*/
 	OnAnimationLoop() {};
 
-	/// Get the current x and y as a vector
+	/**
+	* Get the current x and y as a vector
+	* @returns {object{x:number,y:number}}
+	*/
 	GetPosition() {
 		return {x: this.x, y: this.y};
 	};
