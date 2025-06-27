@@ -112,8 +112,8 @@ class ColliderPoint
 	*/
 	DrawCollider(owner)
 	{
-		let x = owner.position.x + this.offset.x - Game.active_scene.view_x;
-		let y = owner.position.y + this.offset.y - Game.active_scene.view_y;
+		let x = owner.position.x + this.offset.x - Game.active_scene.view_position.x;
+		let y = owner.position.y + this.offset.y - Game.active_scene.view_position.y;
 
 		switch(this.collider_type)
 		{
@@ -193,8 +193,8 @@ const DrawStaticColliders = () => {
 			for (let xx = 0; xx < submap.length; xx++) {
 				if(submap[xx] == 0) continue;
 
-				let xpos = (xx * Game.active_scene.static_col_resolution) - Game.active_scene.view_x;
-				let ypos = (yy * Game.active_scene.static_col_resolution) - Game.active_scene.view_y;
+				let xpos = (xx * Game.active_scene.static_col_resolution) - Game.active_scene.view_position.x;
+				let ypos = (yy * Game.active_scene.static_col_resolution) - Game.active_scene.view_position.y;
 
 				ctx.beginPath();
 				ctx.rect(xpos,

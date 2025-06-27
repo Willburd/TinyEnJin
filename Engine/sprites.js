@@ -125,8 +125,8 @@ const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, a
 	let vy = y;
 	if(context == ctx) // Main screen is only one with view offset
 	{
-		vx = x-Game.active_scene.view_x;
-		vy = y-Game.active_scene.view_y;
+		vx = x-Game.active_scene.view_position.x;
+		vy = y-Game.active_scene.view_position.y;
 	}
 	let xscale_off = 0;
 	if(Math.sign(xscale) < 0) xscale_off = wid * -Math.abs(xscale);

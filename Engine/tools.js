@@ -22,7 +22,7 @@ const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
 }
 
 /**
-* Same as ConstrainPoint, but uses the current object's x and y, and automatically constrains them.
+* Same as ConstrainPoint, but uses the current object's x and y, and returns their constrained position.
 * @param {Entity} ent - The entity to constrain.
 * @param {number} tlx - top left x boundary.
 * @param {number} tly - top left y boundary.
@@ -31,9 +31,7 @@ const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
 * @returns {Vector2}
 */
 const ConstrainEntity = (ent,tlx,tly,brx,bry) => {
-    let pr = ConstrainPoint(ent.position.x,ent.position.y,tlx,tly,brx,bry);
-    ent.position = pr;
-    return pr;
+    return ConstrainPoint(ent.position.x,ent.position.y,tlx,tly,brx,bry);
 }
 
 /**
@@ -158,7 +156,7 @@ const circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
 * @returns {boolean} If the point is within the view or the padding specified.
 */
 const PointInsideView = (x,y,pad) => {
-    return PointInsideRectangle(x,y, Game.active_scene.view_x - pad, Game.active_scene.view_y - pad, Game.active_scene.view_x + ViewWidth() + pad, Game.active_scene.view_y + ViewHeight() + pad);
+    return PointInsideRectangle(x,y, Game.active_scene.view_position.x - pad, Game.active_scene.view_position.y - pad, Game.active_scene.view_position.x + ViewWidth() + pad, Game.active_scene.view_position.y + ViewHeight() + pad);
 }
 
 /**

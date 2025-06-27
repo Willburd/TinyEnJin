@@ -20,8 +20,7 @@ const START_SCENE = (new_scene) =>
 
 class Scene {
     // View scrolling
-    view_x = 0;
-    view_y = 0;
+    view_position = new Vector2(0,0);
 
     static_collision_map = []; // Collision 2d array for static collisions
     static_col_resolution = 16; // Pixels per collision index

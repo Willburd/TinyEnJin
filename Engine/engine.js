@@ -72,10 +72,6 @@ class Game
 	previousTimeMs = 0;
 	loops = 0;
 
-	/// View control
-	view_x = 0;
-	view_y = 0;
-
 	/**
 	* Starts game and begins Update loop
 	* @returns {null}
@@ -227,6 +223,22 @@ class Vector2 {
 		return new Vector2(this.x + vector.x,this.y + vector.y);
 	}
 	
+	/** 
+	* @param {number} scaler 
+	* @returns {Vector2} A new vector based on the original vector multiplied with the scaler
+	*/
+	Mult(scaler){
+		return new Vector2(this.x * scaler,this.y * scaler);
+	}
+
+	/** 
+	* @param {number} denominator 
+	* @returns {Vector2} A new vector based on the original vector divided with the denominator
+	*/
+	Div(denominator){
+		return new Vector2(this.x / denominator,this.y / denominator);
+	}
+
 	/** 
 	* @param {Vector2} vector - Adds the provided vector into the current vector directly.
 	*/
