@@ -220,6 +220,16 @@ const MoveToward = (angle,distance) => {
 }
 
 /**
+* Gets a normalized vector based on the angle provided
+* @param {number} angle - angle to create a vector from.
+* @returns {Vector2}
+*/
+const VectorFromAngle = (angle) =>
+{
+    return MoveToward(angle,1);
+}
+
+/**
 * Snaps input angle to a multiple of the snap angle provided. ex: snapping to every 45 degree angle.
 * @param {number} angle - The source angle.
 * @param {number} snap - The angle incriments that will be used to round the source angle.
