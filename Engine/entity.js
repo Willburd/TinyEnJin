@@ -1,16 +1,37 @@
 
 let entities_created = 0;
 
+/**
+* Gets an entity from a unique string ID. 
+* @param {string} identity_string - Entity's unique string id.
+* @returns {Entity}
+*/
+const GET_ENTITY = (identity_string) => {
+	if(identity_string == undefined || identity_string == null || Game.active_game.id_to_entity[identity_string] == undefined) return null;
+	return Game.active_game.id_to_entity[identity_string];
+}
+
+/**
+* Gets the unique string id of the entity so it can be quickly referenced later by other entities.
+* @param {Entity} ent - Entity to get the unique string id from.
+* @returns {string} Entity's unique string id.
+*/
+const GET_UNIQUE_ID = (ent) => {
+	if(ent == undefined || ent == null || ent.__destroyed) return null;
+	return ent.__identifier;
+}
+
 class Entity 
 {
 	// Internal
+	__identifier = "";
+	__SLOT_NUM = 0;
 	__destroyed = false;
 	__canvas = null;
 	PERSISTANT = false; // If it can surface destroy_all()
 
 	// Core
 	ent_name = "";
-	id = 0;
 	position = new Vector2(0,0);
 	start_position = new Vector2(0,0);
 	prev_position = new Vector2(0,0);

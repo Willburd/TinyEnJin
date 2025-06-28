@@ -10,11 +10,13 @@ const DESTROY = (ent,unloading = false) => {
     if(ent.__destroyed)
         return
 	// Removal
-    Game.active_game.all_entities[ent.id] = null;
-	Game.active_game.recently_free_slots.push(ent.id);
+    Game.active_game.all_entities[ent.__SLOT_NUM] = null;
+    delete Game.active_game.id_to_entity[ent.__identifier];
+	Game.active_game.recently_free_slots.push(ent.__SLOT_NUM);
 	// Cleanup
+	//console.log("DESTROY ENTITY: " + ent.__identifier + " slot: " + ent.__SLOT_NUM);
+    ent.__SLOT_NUM = -1;
     ent.OnDestroy(unloading);
-    ent.id = -1;
     if(ent.collider != null) delete ent.collider;
     ent.collider = null;
     ent.__destroyed = true;
@@ -40,6 +42,8 @@ const DESTROY_ALL = (unloading,forced) => {
             }
             else
             {
+                // Re-add to list, apply new ID
+                element.__SLOT_NUM = new_list.length;
                 new_list.push(element);
             }
         }

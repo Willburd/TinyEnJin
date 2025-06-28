@@ -67,6 +67,7 @@ class Game
 	all_entities = [];
 	depth_sort = [];
 	recently_free_slots = [];
+	id_to_entity = {};
 	
 	FRAME_INTERVAL_MS = 0;
 	previousTimeMs = 0;
@@ -113,6 +114,30 @@ class Game
 	*/
     Update() {};
 
+		
+	/**
+	* Assigns core data to an entity, such as where it is in the processing list, and the callback ID.
+	* @param {Entity} inti - Entity being constructed
+	* @returns {null}
+	*/
+	__ENTITYINIT(inti) {
+		// Use recently freed slots first
+		let finder = Game.active_game.recently_free_slots.pop();
+		if(finder == undefined)
+		{
+			finder = Game.active_game.all_entities.length;
+			if(finder >= ENTITY_CAP)
+				console.error("BREACHING ENTITY CAP: " + finder);
+		}
+		//console.log(Game.active_game.recently_free_slots);
+		Game.active_game.all_entities[finder] = inti;
+		inti.__SLOT_NUM = finder;
+		inti.__identifier = btoa(Rand(1,999999999).toString() + this.previousTimeMs.toString() + entities_created.toString() + entities_destroyed.toString());
+		this.id_to_entity[inti.__identifier] = inti;
+		inti.OnInit();
+		//console.log("CREATED ENTITY: " + inti.__identifier + " slot: " + inti.__SLOT_NUM);
+	}
+
 	/**
 	* Core game update function. All entities process here.
 	* @returns {number} The number of entities that exist by the end of the frame.
@@ -120,19 +145,7 @@ class Game
     __PROCESS() {
 		// Create pending objects
 		while(this.init_queue.length) {
-			// Use recently freed slots first
-			let inti = this.init_queue.pop();
-			let finder = Game.active_game.recently_free_slots.pop();
-			if(finder == undefined)
-			{
-				finder = Game.active_game.all_entities.length;
-				if(finder >= ENTITY_CAP)
-					console.error("BREACHING ENTITY CAP: " + finder);
-			}
-			//console.log(Game.active_game.recently_free_slots);
-			Game.active_game.all_entities[finder] = inti;
-			inti.id = finder;
-			inti.OnInit();
+			this.__ENTITYINIT(this.init_queue.pop())
 		}
 
 		// Self Update
