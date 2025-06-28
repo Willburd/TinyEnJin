@@ -172,12 +172,18 @@ class ColliderCircle extends ColliderPoint
 */
 const GetStaticCollision = (x,y) =>
 {
-	if(Game.active_scene == null || Game.active_scene.static_collision_map.length <= 0) return 0;
-	if(y >= Game.active_scene.static_collision_map.length) return 0;
-	let submap = Game.active_scene.static_collision_map[y];
-	if(submap == null || submap.length <= 0) return 0;
-	if(x >= submap.length) return 0;
-	return submap[x];
+	if(x < 0) x = 0;
+	if(y < 0) y = 0;
+	if(Game.active_scene == null || Game.active_scene.static_collision_map.length <= 0) 
+		return 0;
+	if(Math.floor(y/Game.active_scene.static_col_resolution) >= Game.active_scene.static_collision_map.length) 
+		return 0;
+	let submap = Game.active_scene.static_collision_map[Math.floor(y/Game.active_scene.static_col_resolution)];
+	if(submap == null || submap.length <= 0) 
+		return 0;
+	if(Math.floor(x/Game.active_scene.static_col_resolution) >= submap.length) 
+		return 0;
+	return submap[Math.floor(x/Game.active_scene.static_col_resolution)];
 }
 
 /**

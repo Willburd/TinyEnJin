@@ -4,7 +4,7 @@ const ENTITY_LIST_REFRESH_THRESHOLD = 20 // Amount of nulls in the entity proces
 
 const BACKGROUND_LAYER = -99999;
 const DRAW_COLLIDERS = false;
-const DRAW_STATIC_COLLIDERS = false;
+const DRAW_STATIC_COLLIDERS = true;
 
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
@@ -14,6 +14,10 @@ const INPUT_ARROWUP = 'arrowup';
 const INPUT_ARROWDOWN = 'arrowdown';
 const INPUT_ARROWLEFT = 'arrowleft';
 const INPUT_ARROWRIGHT = 'arrowright';
+
+const AXIS_X = 1;
+const AXIS_Y = 2;
+const AXIS_BOTH = (AXIS_X|AXIS_Y);
 
 const MOVE_ITERATIONS = 8;
 

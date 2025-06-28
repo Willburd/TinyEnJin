@@ -59,6 +59,36 @@ const Lerp = (start, end, percent) =>
     return (start * (1 - percent)) + (end * percent);
 }
 
+/**
+* Gets a value rounded to a multiple of the incriment provided. ex: rounding to 10 means 8 will round up to 10, or 3 to 0.
+* @param {number} val - The value being rounded.
+* @param {number} round - the incriment to round to.
+* @returns {number}
+*/
+const RoundToIncriment = (val,round) => {
+    return Math.round(val / round) * round;
+}
+
+/**
+* Gets a value floored to a multiple of the incriment provided. ex: rounding to 10 means 8 will round up to 10, or 3 to 0.
+* @param {number} val - The value being floored.
+* @param {number} round - the incriment to floored to.
+* @returns {number}
+*/
+const FloorToIncriment = (val,round) => {
+    return Math.floor(val / round) * round;
+}
+
+/**
+* Gets a value ceil to a multiple of the incriment provided. ex: rounding to 10 means 8 will round up to 10, or 3 to 0.
+* @param {number} val - The value being ceil.
+* @param {number} round - the incriment to ceil to.
+* @returns {number}
+*/
+const CeilToIncriment = (val,round) => {
+    return Math.ceil(val / round) * round;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Collision
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,6 +245,8 @@ const AngleTo = (x,y,ent) => {
 * @returns {Vector2}
 */
 const MoveToward = (angle,distance) => {
+    if(angle < 0) return new Vector2(0,0);
+    if(distance == 0) return new Vector2(0,0);
     let dir = angle / (180 / Math.PI);
     return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
 }
