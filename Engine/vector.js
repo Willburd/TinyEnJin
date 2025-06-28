@@ -9,55 +9,88 @@ class Vector2 {
 	}
 
 	/** 
-	* @param {Vector2} vector 
-	* @returns {Vector2} A new vector based on the original vector added with the provided vector
+	* @param {Vector2} vector - Adds the provided vector into the current vector.
+	* @returns {Vector2} Returns this vector.
 	*/
 	Add(vector){
-		return new Vector2(this.x + vector.x,this.y + vector.y);
+		this.x += vector.x;
+		this.y += vector.y;
+		return this;
 	}
 	
 	/** 
-	* @param {number} scaler 
-	* @returns {Vector2} A new vector based on the original vector multiplied with the scaler
+	* @param {number} scaler - Multiplied with the current vector.
+	* @returns {Vector2} Returns this vector.
 	*/
-	Mult(scaler){
-		return new Vector2(this.x * scaler,this.y * scaler);
+	Multiply(scaler){
+		this.x *= scaler;
+		this.y *= scaler;
+		return this;
 	}
 
 	/** 
-	* @param {number} denominator 
-	* @returns {Vector2} A new vector based on the original vector divided with the denominator
+	* @param {number} denominator - Current vector is divided by this.
+	* @returns {Vector2} Returns this vector.
 	*/
-	Div(denominator){
-		return new Vector2(this.x / denominator,this.y / denominator);
+	Divide(denominator){
+		this.x /= denominator;
+		this.y /= denominator;
+		return this;
 	}
 
 	/** 
-	* @param {Vector2} vector - Adds the provided vector into the current vector directly.
-	* @returns {null}
-	*/
-	Merge(vector){
-		this.x += vector.x;
-		this.y += vector.y;
-	}
-
-	/** 
-	* @param {number} acc - Adds the provided number to the vector's current heading.
-	* @returns {null}
+	* @param {number} acc - Adds the provided number to the vector's current magnitude without changing heading.
+	* @returns {Vector2} Returns this vector.
 	*/
 	Accelerate(acc){
-        this.Merge(MoveToward(this.Heading(),acc));
-        this.Copy()
+        this.Add(MoveToward(this.Heading(),acc));
+		return this;
 	}
 
 	/** 
-	* @param {number} decl - Removes the provided number from the vector's current distance, bottoms out at 0.
-	* @returns {null}
+	* @param {number} decl - Removes the provided number from the vector's current magnitude, bottoms out at 0.
+	* @returns {Vector2} Returns this vector.
 	*/
 	Decelerate(decl){
         let dist = Magnitude() - decl;
         if(dist < 0) dist = 0;
-        this.Copy(MoveToward(this.Heading(),decl));
+		let new_vec = MoveToward(this.Heading(),decl);
+		this.Zero();
+        this.Add(new_vec);
+		return this;
+	}
+
+	/** 
+	* Normalizes this vector to a unit distance of 1.
+	* @returns {Vector2} Returns this vector.
+	*/
+	Normalized(){
+		let heading = this.Heading();
+		if(heading == -1) return this;
+		let new_vec = MoveToward(heading,1);
+		this.x = new_vec.x;
+		this.y = new_vec.y;
+		return this;
+	}
+
+	/** 
+	* Inverts the sign of the vector's component x and y.
+	* @returns {Vector2} Returns this vector.
+	*/
+	Inverse(){
+		this.x *= -1;
+		this.y *= -1;
+		return this;
+	}
+
+	/** 
+	* Returns the vector to its default state of 0,0
+	* @returns {Vector2} Returns this vector.
+	*/
+	Zero(){
+        this.x = 0;
+		this.y = 0;
+		return this;
 	}
 
 	/** 
@@ -73,13 +106,6 @@ class Vector2 {
 	*/
 	Copy(){
 		return new Vector2(this.x,this.y);
-	}
-	
-	/** 
-	* @returns {Vector2} An inverse copy of the current vector.
-	*/
-	Inverse(){
-		return new Vector2(-this.x,-this.y);
 	}
 
 	/** 

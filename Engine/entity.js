@@ -150,7 +150,7 @@ class GameObj extends Entity
 	{
 		super.__INTERNAL_UPDATE();
 		this.prev_position = this.position.Copy();
-		this.position.Merge(this.SPEED);
+		this.position.Add(this.SPEED);
 		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.position.x,this.position.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
 	};
 }

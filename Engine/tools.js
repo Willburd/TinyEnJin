@@ -250,6 +250,20 @@ const AngleToIndex = (angle, max_index) => {
     return (Math.round(angle / angle_per_index));
 }
 
+/**
+* Returns an index from 0 to the max specified, based on the angle input. Intended for turning angles into frame number in a rotation animation.
+* @param {string} upkey Up keyboard key.
+* @param {string} downkey Down keyboard key.
+* @param {string} leftkey Left keyboard key.
+* @param {string} rightkey Right keyboard key.
+* @returns {Vector2} A non-normalized vector representing the current inputs of up down left and right.
+*/
+const GetInputVector = (upkey,downkey,leftkey,rightkey) => {
+    let UD = isKeyDown(downkey) - isKeyDown(upkey);
+    let LR = isKeyDown(rightkey) - isKeyDown(leftkey);
+    return new Vector2( LR, UD);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Drawing sprites
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

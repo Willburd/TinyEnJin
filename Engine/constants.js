@@ -10,6 +10,11 @@ const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
 const COLLIDERTYPE_CIRCLE = 2;
 
+const INPUT_ARROWUP = 'arrowup';
+const INPUT_ARROWDOWN = 'arrowdown';
+const INPUT_ARROWLEFT = 'arrowleft';
+const INPUT_ARROWRIGHT = 'arrowright';
+
 const MOVE_ITERATIONS = 8;
 
 const BLENDMODE_SOURCEOVER = "source-over"; // This is the default setting and draws new shapes on top of the existing canvas content.
