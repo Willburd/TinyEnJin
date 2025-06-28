@@ -55,8 +55,7 @@ class Vector2 {
         let dist = Magnitude() - decl;
         if(dist < 0) dist = 0;
 		let new_vec = MoveToward(this.Heading(),decl);
-		this.Zero();
-        this.Add(new_vec);
+		this.Zero().Add(new_vec);
 		return this;
 	}
 
@@ -66,7 +65,8 @@ class Vector2 {
 	*/
 	Normalized(){
 		let heading = this.Heading();
-		if(heading == -1) return this;
+		if(heading == -1) 
+			return this;
 		let new_vec = MoveToward(heading,1);
 		this.x = new_vec.x;
 		this.y = new_vec.y;
@@ -112,7 +112,8 @@ class Vector2 {
 	* @returns {number} An angle representing the heading of the vector. -1 if not possible.
 	*/
 	Heading(){
-        if(this.x == 0 && this.y == 0) return -1;
+        if(this.x == 0 && this.y == 0) 
+			return -1;
 		return FindAngle(0,0,this.x,this.y);
 	}
 
