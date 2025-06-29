@@ -38,6 +38,9 @@ __UPDATE_KEYPRESS = () => {
 // Frame render loop. Where the game ACTUALLY updates. But much more often renders...
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+let SHOW_FPS = true;
+let fps = 1;
+const times = [];
 /**
 * This loop goes on forever by requesting it to trigger next browser frame. This is not recursive, as it's schedualing a call instead of just calling.
 * @param {number} currentTimeMs - The current requestAnimationFrame time that the frame is being called with. Used in deltatime calculation.
@@ -48,11 +51,19 @@ const __FRAME = (currentTimeMs, forced) => {
 	requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
 	// Requires focus to play, or GC gets really unhappy
-	const deltaTimeMs = currentTimeMs - Game.active_game.__PREVIOUS_TIME_MS;
-	if (deltaTimeMs >= Game.active_game.__FRAME_INTERVAL_MS || forced) {
+	const deltaTimeMs = currentTimeMs - Game.active_game.__PREVIOUS_UPDATE_MS;
+	if (deltaTimeMs >= Game.active_game.__UPDATE_RATE_MS || forced) {
+		if(SHOW_FPS)
+		{
+			while (times.length > 0 && times[0] <= currentTimeMs - 1000) {
+				times.shift();
+			}
+			times.push(currentTimeMs);
+			fps = times.length;
+		}
 		Game.active_game.__PROCESS();
-		const offset = deltaTimeMs % Game.active_game.__FRAME_INTERVAL_MS;
-		Game.active_game.__PREVIOUS_TIME_MS = currentTimeMs - offset;
+		const offset = deltaTimeMs % Game.active_game.__UPDATE_RATE_MS;
+		Game.active_game.__PREVIOUS_UPDATE_MS = currentTimeMs - offset;
 		__UPDATE_KEYPRESS();
 	}
 	if(Game.active_scene != null)
@@ -78,10 +89,7 @@ class Game
 	recently_free_slots = [];
 	id_to_entity = {};
 	
-	__FRAMERATE = 60;
-	__FRAME_INTERVAL_MS = 0; 
-	__PREVIOUS_TIME_MS = 0;
-	loops = 0;
+	__UPDATERATE = 60; // Updates per second, browser sets fps
 
 	/**
 	* Starts game and begins Update loop
@@ -94,11 +102,14 @@ class Game
 			return
 		}
 		Game.active_game = this;
-		this.__FRAME_INTERVAL_MS = 1000 / Game.active_game.__FRAMERATE;
+		this.__UPDATE_RATE_MS = 1000 / Game.active_game.__UPDATERATE;
 		this.Init();
 		requestAnimationFrame(__FRAME);
 		return 1;
 	};
+	__UPDATE_RATE_MS = 0; 
+	__PREVIOUS_UPDATE_MS = 0;
+	loops = 0;
 
 	/**
 	* Ends game and destroys all scenes and entities
@@ -149,7 +160,7 @@ class Game
 		//console.log(Game.active_game.recently_free_slots);
 		Game.active_game.all_entities[finder] = inti;
 		inti.__SLOT_NUM = finder;
-		inti.__identifier = btoa(Rand(1,999999999).toString() + this.__PREVIOUS_TIME_MS.toString() + entities_created.toString() + entities_destroyed.toString());
+		inti.__identifier = btoa(Rand(1,999999999).toString() + this.__PREVIOUS_UPDATE_MS.toString() + entities_created.toString() + entities_destroyed.toString());
 		this.id_to_entity[inti.__identifier] = inti;
 		inti.OnInit();
 		//console.log("CREATED ENTITY: " + inti.__identifier + " slot: " + inti.__SLOT_NUM);
@@ -178,11 +189,6 @@ class Game
 			let new_list = []; // Removing nulls
 			this.all_entities.forEach(enu => {
 				// Update early event
-				console.log("TEST");
-				console.log(enu);
-				console.log(enu.PROCESSFLAGS);
-				console.log(this.__MODESTATE);
-				console.log(enu.PROCESSFLAGS & this.__MODESTATE);
 				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
 				{
 					enu.EarlyUpdate();

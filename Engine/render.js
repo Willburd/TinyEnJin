@@ -50,5 +50,11 @@ const __RENDER = () => {
 		}
 	});
 	if(DRAW_STATIC_COLLIDERS) DrawStaticColliders();
+	if(SHOW_FPS) __DRAWFPS();
 	return rendered_ents;
 };
+
+const __DRAWFPS = () => {
+	ctx.fillStyle = "#ffffffBB";
+	ctx.fillText(fps.toString(), 4, 12, 12);
+}
