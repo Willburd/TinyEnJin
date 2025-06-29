@@ -48,11 +48,11 @@ const __FRAME = (currentTimeMs, forced) => {
 	requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
 	// Requires focus to play, or GC gets really unhappy
-	const deltaTimeMs = currentTimeMs - Game.active_game.previousTimeMs;
-	if (deltaTimeMs >= Game.active_game.FRAME_INTERVAL_MS || forced) {
+	const deltaTimeMs = currentTimeMs - Game.active_game.__PREVIOUS_TIME_MS;
+	if (deltaTimeMs >= Game.active_game.__FRAME_INTERVAL_MS || forced) {
 		Game.active_game.__PROCESS();
-		const offset = deltaTimeMs % Game.active_game.FRAME_INTERVAL_MS;
-		Game.active_game.previousTimeMs = currentTimeMs - offset;
+		const offset = deltaTimeMs % Game.active_game.__FRAME_INTERVAL_MS;
+		Game.active_game.__PREVIOUS_TIME_MS = currentTimeMs - offset;
 		__UPDATE_KEYPRESS();
 	}
 	if(Game.active_scene != null)
@@ -67,18 +67,20 @@ const __FRAME = (currentTimeMs, forced) => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Game 
 {
+	name = "";
 	static active_game = null;
 	static active_scene = null;
-	name = "";
 
+	__MODESTATE = GAMEMODE_BASIC;
 	init_queue = [];
 	all_entities = [];
 	depth_sort = [];
 	recently_free_slots = [];
 	id_to_entity = {};
 	
-	FRAME_INTERVAL_MS = 0;
-	previousTimeMs = 0;
+	__FRAMERATE = 60;
+	__FRAME_INTERVAL_MS = 0; 
+	__PREVIOUS_TIME_MS = 0;
 	loops = 0;
 
 	/**
@@ -86,13 +88,13 @@ class Game
 	* @returns {null}
 	*/
 	__START() {
-		this.FRAME_INTERVAL_MS = 1000 / 60;
 		if(Game.active_game != null)
 		{
 			console.error("MULTIPLE GAMES ATTEMPTED TO START");
 			return
 		}
 		Game.active_game = this;
+		this.__FRAME_INTERVAL_MS = 1000 / Game.active_game.__FRAMERATE;
 		this.Init();
 		requestAnimationFrame(__FRAME);
 		return 1;
@@ -122,7 +124,14 @@ class Game
 	*/
     Update() {};
 
-		
+	/**
+	* Sets the mode state of the game, can be used to give processing filter layers to entities. Such as entities that only process or render on a pause screen.
+	* @returns {null}
+	*/
+    SetModeState(new_state) {
+		this.__MODESTATE = new_state;
+	};
+
 	/**
 	* Assigns core data to an entity, such as where it is in the processing list, and the callback ID.
 	* @param {Entity} inti - Entity being constructed
@@ -140,7 +149,7 @@ class Game
 		//console.log(Game.active_game.recently_free_slots);
 		Game.active_game.all_entities[finder] = inti;
 		inti.__SLOT_NUM = finder;
-		inti.__identifier = btoa(Rand(1,999999999).toString() + this.previousTimeMs.toString() + entities_created.toString() + entities_destroyed.toString());
+		inti.__identifier = btoa(Rand(1,999999999).toString() + this.__PREVIOUS_TIME_MS.toString() + entities_created.toString() + entities_destroyed.toString());
 		this.id_to_entity[inti.__identifier] = inti;
 		inti.OnInit();
 		//console.log("CREATED ENTITY: " + inti.__identifier + " slot: " + inti.__SLOT_NUM);
@@ -169,14 +178,19 @@ class Game
 			let new_list = []; // Removing nulls
 			this.all_entities.forEach(enu => {
 				// Update early event
-				if(enu != null && !enu.__destroyed)
+				console.log("TEST");
+				console.log(enu);
+				console.log(enu.PROCESSFLAGS);
+				console.log(this.__MODESTATE);
+				console.log(enu.PROCESSFLAGS & this.__MODESTATE);
+				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
 				{
 					enu.EarlyUpdate();
 				}	
 			});
 			this.all_entities.forEach(enu => {
 				// Update main event
-				if(enu != null && !enu.__destroyed)
+				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
 				{
 					enu.__INTERNAL_UPDATE();
 					enu.Update();
@@ -187,10 +201,10 @@ class Game
 				// Update late event
 				if(enu != null && !enu.__destroyed)
 				{
-					enu.LateUpdate();
+					if(enu.PROCESSFLAGS & this.__MODESTATE) enu.LateUpdate();
 					if(!enu.__destroyed) // Check if late Update destroyed us...
 					{
-						if(enu.visible)	
+						if(enu.visible && (enu.RENDERFLAGS & this.__MODESTATE))	
 						{
 							// Prepare for drawing
 							if(this.depth_sort[100000 + enu.depth] == undefined) 

@@ -1,10 +1,18 @@
 const ENTITY_CAP = 60; //2048; (Use lower to catch memory leaks)
 const RENDER_WARNING_LIMIT = 256; // Amount of sprites that can be drawn per frame before it starts giving warnings
 const ENTITY_LIST_REFRESH_THRESHOLD = 20 // Amount of nulls in the entity processing list that triggers a rebuild
-
-const BACKGROUND_LAYER = -99999;
 const DRAW_COLLIDERS = false;
 const DRAW_STATIC_COLLIDERS = true;
+
+const GAMEMODE_BASIC = (1 << 0);
+const GAMEMODE_PAUSE = (1 << 1);
+const GAMEMODE_TITLE = (1 << 2);
+const GAMEMODE_TRANSITION = (1 << 3);
+const GAMEMODE_GAMEOVER = (1 << 4);
+const GAMEMODE_ALL = ~(0);
+
+const DEPTH_BACKGROUND = -100000;
+const DEPTH_DEFAULT = 0;
 
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
@@ -15,8 +23,8 @@ const INPUT_ARROWDOWN = 'arrowdown';
 const INPUT_ARROWLEFT = 'arrowleft';
 const INPUT_ARROWRIGHT = 'arrowright';
 
-const AXIS_X = 1;
-const AXIS_Y = 2;
+const AXIS_X = (1 << 0);
+const AXIS_Y = (1 << 1);
 const AXIS_BOTH = (AXIS_X|AXIS_Y);
 
 const MOVE_ITERATIONS = 8;

@@ -28,14 +28,16 @@ class Entity
 	__SLOT_NUM = 0;
 	__destroyed = false;
 	__canvas = null;
-	PERSISTANT = false; // If it can surface destroy_all()
+	PERSISTANT = false; // If it can survive destroy_all(), allowing it to exist between scenes.
+	PROCESSFLAGS = GAMEMODE_BASIC; // Bitflags that is used to check if this object processes during a frame. Such as if it processes while the game is paused.
+	RENDERFLAGS = GAMEMODE_ALL; // Bitflags, as above, but when the object renders.
 
 	// Core
 	ent_name = "";
 	position = new Vector2(0,0);
 	start_position = new Vector2(0,0);
 	prev_position = new Vector2(0,0);
-	depth = 0;		// Draw depth, higher numbers Draw closer to the screen
+	depth = DEPTH_DEFAULT;		// Draw depth, higher numbers Draw closer to the screen
 	collider = null;
 
 	// Drawing
