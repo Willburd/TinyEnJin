@@ -59,7 +59,8 @@ const DESTROY_ALL = (unloading,forced) => {
 */
 const REFRESH_ENTITY_LIST = (new_list) => {
     console.log("Refreshed entity list. " + Game.active_game.all_entities.length + " => " + new_list.length + " Diff: " + Math.abs(new_list.length - Game.active_game.all_entities.length));
-    Game.active_game.all_entities.length = 0;
+    delete Game.active_game.all_entities;
     Game.active_game.all_entities = new_list;
+    delete Game.active_game.recently_free_slots;
     Game.active_game.recently_free_slots = [];
 }

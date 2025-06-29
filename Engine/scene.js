@@ -11,6 +11,7 @@ const START_SCENE = (new_scene) =>
         let datapack = old_scene.OnDestroy(); // Called before we destroy everything.
         DESTROY_ALL(true, false);
         if(new_scene != null) new_scene.OnTransfer(old_scene,datapack);
+        Game.active_scene = null;
         delete old_scene;
     }
     Game.active_scene = new_scene;

@@ -48,12 +48,12 @@ const times = [];
 * @returns {null}
 */
 const __FRAME = (currentTimeMs, forced) => {
-	requestAnimationFrame(__FRAME);
+	if(!forced) requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
 	// Requires focus to play, or GC gets really unhappy
 	const deltaTimeMs = currentTimeMs - Game.active_game.__PREVIOUS_UPDATE_MS;
 	if (deltaTimeMs >= Game.active_game.__UPDATE_RATE_MS || forced) {
-		if(SHOW_FPS)
+		if(!forced && SHOW_FPS)
 		{
 			while (times.length > 0 && times[0] <= currentTimeMs - 1000) {
 				times.shift();
@@ -183,6 +183,9 @@ class Game
 		// Update objects
 		let all_colliders = [];
 		let processed_ents = 0;
+
+		// Process and sort depth for rendering
+		delete this.depth_sort;
 		this.depth_sort = [];
 		if(this.all_entities.length > 0)
 		{
