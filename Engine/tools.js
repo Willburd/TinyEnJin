@@ -291,8 +291,8 @@ const AngleToIndex = (angle, max_index) => {
 * @returns {Vector2} A non-normalized vector representing the current inputs of up down left and right.
 */
 const GetInputVector = (upkey,downkey,leftkey,rightkey) => {
-    let UD = isKeyDown(downkey) - isKeyDown(upkey);
-    let LR = isKeyDown(rightkey) - isKeyDown(leftkey);
+    let UD = isKeyHeld(downkey) - isKeyHeld(upkey);
+    let LR = isKeyHeld(rightkey) - isKeyHeld(leftkey);
     return new Vector2( LR, UD);
 }
 

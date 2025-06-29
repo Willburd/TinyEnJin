@@ -23,6 +23,13 @@ const __CREATE_RENDER_CONTEXT = () =>
 const __RENDER = () => {
 	// Clear canvas
 	ctx.clearRect(0, 0, main_canvas.width, main_canvas.height);
+	ctx.beginPath();
+	ctx.rect(0,
+			0,
+			main_canvas.width,
+			main_canvas.height);
+	ctx.fillStyle = Game.active_scene.DefaultDrawColor();
+	ctx.fill();
 
 	let rendered_ents = 0;
 	// Draw objects

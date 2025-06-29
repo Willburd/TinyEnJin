@@ -53,4 +53,13 @@ class Scene {
     { 
         return {};
     };
+
+	/**
+	* Returns html color to clear the screen with each frame.
+	* @returns {color}
+	*/
+    DefaultDrawColor()
+    {
+        return "#00000000"; // Clear alpha
+    }
 }

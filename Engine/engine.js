@@ -22,10 +22,17 @@ const __INTERNAL_LOADING = () => {
 	__SETUP(); // Must be defined in PROJECT
 }
 // Setup input handler
-const pressedKeys = new Set();
-const isKeyDown = (key) => pressedKeys.has(key);
-document.addEventListener('keydown', (e) => pressedKeys.add(e.key.toLowerCase()));
-document.addEventListener('keyup', (e) => pressedKeys.delete(e.key.toLowerCase()));
+let previous_pressed_keys = new Set();
+let pressed_keys = new Set();
+const isKeyHeld = (key) => pressed_keys.has(key);
+const isKeyPressed = (key) => (!previous_pressed_keys.has(key) && pressed_keys.has(key));
+const isKeyReleased = (key) => (previous_pressed_keys.has(key) && !pressed_keys.has(key));
+document.addEventListener('keydown', (e) => pressed_keys.add(e.key.toLowerCase()));
+document.addEventListener('keyup', (e) => pressed_keys.delete(e.key.toLowerCase()));
+__UPDATE_KEYPRESS = () => {
+	if(previous_pressed_keys != null) delete previous_pressed_keys;
+	previous_pressed_keys = new Set(pressed_keys);
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Frame render loop. Where the game ACTUALLY updates. But much more often renders...
@@ -46,6 +53,7 @@ const __FRAME = (currentTimeMs, forced) => {
 		Game.active_game.__PROCESS();
 		const offset = deltaTimeMs % Game.active_game.FRAME_INTERVAL_MS;
 		Game.active_game.previousTimeMs = currentTimeMs - offset;
+		__UPDATE_KEYPRESS();
 	}
 	if(Game.active_scene != null)
 	{
