@@ -17,8 +17,14 @@ const DESTROY = (ent,unloading = false) => {
 	//console.log("DESTROY ENTITY: " + ent.__identifier + " slot: " + ent.__SLOT_NUM);
     ent.__SLOT_NUM = -1;
     ent.OnDestroy(unloading);
-    if(ent.collider != null) delete ent.collider;
-    ent.collider = null;
+    if(ent.colliders != null) 
+    {
+        ent.colliders.forEach(collid => {
+            delete collid;
+        });
+        delete ent.colliders;
+    }
+    ent.colliders = null;
     ent.__destroyed = true;
     ent.__canvas = null;
     delete ent;

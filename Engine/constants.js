@@ -17,6 +17,7 @@ const DEPTH_DEFAULT = 0;
 const COLLIDERTYPE_POINT = 0;
 const COLLIDERTYPE_RECTANGLE = 1;
 const COLLIDERTYPE_CIRCLE = 2;
+const COLLIDERTYPE_RAYCAST = 3;
 
 const INPUT_ARROWUP = 'arrowup';
 const INPUT_ARROWDOWN = 'arrowdown';
@@ -27,7 +28,7 @@ const AXIS_X = (1 << 0);
 const AXIS_Y = (1 << 1);
 const AXIS_BOTH = (AXIS_X|AXIS_Y);
 
-const MOVE_ITERATIONS = 8;
+const RAYCAST_ITERATIONS = 16; // Points along a raycast checked. This is used to divide the length of the ray into segments that will be checked, instead of checking all the points of a raycast 200 pixels long!
 
 const BLENDMODE_SOURCEOVER = "source-over"; // This is the default setting and draws new shapes on top of the existing canvas content.
 const BLENDMODE_SOURCEIN = "source-in"; //The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.

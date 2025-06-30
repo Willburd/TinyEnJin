@@ -45,7 +45,12 @@ const __RENDER = () => {
 			});
 			sub_array.forEach(enr => {
 				enr.LateDraw();
-				if(DRAW_COLLIDERS && enr.collider) enr.collider.DrawCollider(enr);
+				if(DRAW_COLLIDERS && enr.colliders != null && enu.colliders.length) 
+				{
+					enr.colliders.forEach(collid => {
+						collid.DrawCollider(enr);
+					});
+				}
 			});
 		}
 	});

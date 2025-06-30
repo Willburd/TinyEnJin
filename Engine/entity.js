@@ -38,7 +38,7 @@ class Entity
 	start_position = new Vector2(0,0);
 	prev_position = new Vector2(0,0);
 	depth = DEPTH_DEFAULT;		// Draw depth, higher numbers Draw closer to the screen
-	collider = null;
+	colliders = null;
 
 	// Drawing
 	sprite = "";
@@ -104,11 +104,11 @@ class Entity
 	LateUpdate() {};
 
 	/**
-	* Collision behavior. Called when a collider overlaps with another collider at the end of a frame. This is checked after all objects have been processed.
-	* @param {Entity} other - Other entity involved in the collision. Use "other instanceof ClassTypeHere" to identify specific entity types for complex logic. 
+	* Collision behavior. Called when a collider overlaps or collides with other colliders, called seperately for each collision registered with each collider.
+	* @param {CollisionData} collision_data - Data of the collision that happened.
 	* @returns {null}
 	*/
-	OnCollision(other) {};
+	OnCollision(collision_data) {};
 
 	
 	/**

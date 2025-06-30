@@ -20,6 +20,19 @@ class Vector2 {
 	}
 	
 	/** 
+	* @param {number} angle - Heading of the new vector being added this this vector
+	* @param {number} dist - Magnitude of the new vector being added to this vector;
+	* @param {AXIS} axis - Filter for which axis this operation is applied to
+	* @returns {Vector2} Returns this vector.
+	*/
+	AddHeading(angle,dist,axis = AXIS_BOTH) {
+		let new_heading = MoveToward(angle,dist);
+		if(axis & AXIS_X) this.x += new_heading.x;
+		if(axis & AXIS_Y) this.y += new_heading.y;
+		return this;
+	}
+
+	/** 
 	* @param {number} scaler - Multiplied with the current vector.
 	* @param {AXIS} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.

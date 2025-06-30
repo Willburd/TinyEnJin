@@ -152,3 +152,10 @@ const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, a
 	context.setTransform(1, 0, 0, 1, 0, 0);
 	context.globalAlpha = 1;
 }
+
+const DrawDebugDot = (x,y) =>
+{
+	ctx.beginPath();
+	ctx.arc(x - Game.active_scene.view_position.x, y - Game.active_scene.view_position.y, 1, 0, 2 * Math.PI);
+	ctx.stroke();
+}

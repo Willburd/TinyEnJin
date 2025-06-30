@@ -202,6 +202,9 @@ class Game
 				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
 				{
 					enu.__INTERNAL_UPDATE();
+				}
+				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
+				{
 					enu.Update();
 					processed_ents++;
 				}
@@ -223,7 +226,7 @@ class Game
 							let sublist = this.depth_sort[100000 + enu.depth];
 							sublist.push(enu);
 						}
-						if(enu.collider)
+						if(enu.colliders != null && enu.colliders.length)
 						{
 							// prepare to resolve collisions
 							all_colliders.push(enu);
