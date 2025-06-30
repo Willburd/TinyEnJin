@@ -404,6 +404,13 @@ class StaticCollisionData
 	* @public
 	*/
 	last_free = new Vector2(0,0);
+	
+	/**
+	* The distance of each raycast.
+	* @type {Vector2}
+	* @public
+	*/
+	cast_length = new Vector2(0,0);
 
 	constructor(collision_value, start_x, start_y, hit_x, hit_y, free_x, free_y)
 	{
@@ -431,6 +438,14 @@ class StaticCollisionData
 	{
 		return PointDistance(this.start.x,this.start.y,this.last_free.x,this.last_free.y);
 	}
+	
+	/** 
+	* @returns {Vector2} A vector containing the distances in both axis needed to correct a collision.
+	*/
+	GetCorrectionOffsets()
+	{
+		return new Vector2((this.last_free.x - this.start.x) - this.cast_length.x, (this.last_free.y - this.start.y) - this.cast_length.y);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -447,8 +462,8 @@ const static_col_checks = [];
 */
 const GetStaticCollision = (x,y) =>
 {
-	x = Math.round(x);
-	y = Math.round(y);
+	x = Math.floor(x);
+	y = Math.floor(y);
 	if(x < 0) x = 0;
 	if(y < 0) y = 0;
 	static_col_checks.push([x,y]);
@@ -475,8 +490,8 @@ const GetStaticCollision = (x,y) =>
 */
 const RayCastStaticCollision = (x,y,angle,dist) =>
 {
-	x = Math.round(x);
-	y = Math.round(y);
+	x = Math.floor(x);
+	y = Math.floor(y);
 	if(dist <= 0) return GetStaticCollision(x,y);
 
 	let check_distance = GetRayCastIterationDistance(dist);
@@ -491,8 +506,9 @@ const RayCastStaticCollision = (x,y,angle,dist) =>
 		if(get_data.value > 0) 
 		{
 			// Update the last free position with ours and return the collision.
-			get_data.last_free.x = Math.round(last_free.x);
-			get_data.last_free.y = Math.round(last_free.y);
+			get_data.last_free.x = Math.floor(last_free.x);
+			get_data.last_free.y = Math.floor(last_free.y);
+			get_data.cast_length = MoveToward(angle,dist);
 			return get_data;
 		}
 		else
