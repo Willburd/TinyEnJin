@@ -1,12 +1,10 @@
 import {GAMEMODE,RENDER_WARNING_LIMIT,ENTITY_CAP,ENTITY_LIST_REFRESH_THRESHOLD} from "./constants";
 import {Scene} from "./scene";
-import {Rand} from "./tools";
-import {Entity,entities_created} from "./entity";
+import {Entity} from "./entity";
 import {DESTROY_ALL,entities_destroyed} from "./destroy";
 import {__CREATE_RENDER_CONTEXT,__RENDER} from "./render";
 import {__IMGS_TOTAL,__IMGS_ERR,__LOAD_ASSETS,__LOAD_PROGRESS} from "./sprites";
 import {__RESOLVE_COLLISIONS} from "./collision";
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Launch logic, this is where everything STARTS! Create a render context, then get the game assets
@@ -108,6 +106,9 @@ export class Game
 	
 	private __UPDATERATE:number = 60; // Updates per second, browser sets fps
 
+	static entities_created:number = 0;
+	static entities_destroyed:number = 0;
+
 	/**
 	* Starts game and begins Update loop
 	* @returns {void}
@@ -178,10 +179,8 @@ export class Game
 		}
 		//console.log(Game.active_game.recently_free_slots);
 		Game.active_game.all_entities[finder] = inti;
-		inti.__SLOT_NUM = finder;
-		inti.__identifier = btoa(Rand(1,999999999).toString() + this.__PREVIOUS_UPDATE_MS.toString() + entities_created.toString() + entities_destroyed.toString());
-		this.id_to_entity[inti.__identifier] = inti;
-		inti.OnInit();
+		inti.__INTERNAL_INIT(finder);
+		this.id_to_entity[inti.GetIdentifier()] = inti;
 		//console.log("CREATED ENTITY: " + inti.__identifier + " slot: " + inti.__SLOT_NUM);
 	}
 
@@ -212,18 +211,12 @@ export class Game
 			let new_list = []; // Removing nulls
 			this.all_entities.forEach(enu => {
 				// Update early event
-				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
-				{
-					enu.EarlyUpdate();
-				}	
+				if(enu != null && !enu.IsDestroyed() && (enu.PROCESSFLAGS & this.__MODESTATE)) enu.EarlyUpdate();
 			});
 			this.all_entities.forEach(enu => {
 				// Update main event
-				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
-				{
-					enu.__INTERNAL_UPDATE();
-				}
-				if(enu != null && !enu.__destroyed && (enu.PROCESSFLAGS & this.__MODESTATE))
+				if(enu != null && !enu.IsDestroyed() && (enu.PROCESSFLAGS & this.__MODESTATE)) enu.__INTERNAL_UPDATE();
+				if(enu != null && !enu.IsDestroyed() && (enu.PROCESSFLAGS & this.__MODESTATE))
 				{
 					enu.Update();
 					processed_ents++;
@@ -231,26 +224,20 @@ export class Game
 			});
 			this.all_entities.forEach(enu => {
 				// Update late event
-				if(enu != null && !enu.__destroyed)
+				if(enu != null && !enu.IsDestroyed())
 				{
 					if(enu.PROCESSFLAGS & this.__MODESTATE) enu.LateUpdate();
-					if(!enu.__destroyed) // Check if late Update destroyed us...
+					if(!enu.IsDestroyed()) // Check if late Update destroyed us...
 					{
 						if(enu.visible && (enu.RENDERFLAGS & this.__MODESTATE))	
 						{
 							// Prepare for drawing
-							if(this.depth_sort[100000 + enu.depth] == undefined) 
-							{
-								this.depth_sort[100000 + enu.depth] = [];
-							}
+							if(this.depth_sort[100000 + enu.depth] == undefined) this.depth_sort[100000 + enu.depth] = [];
 							let sublist = this.depth_sort[100000 + enu.depth];
 							sublist.push(enu);
 						}
-						if(enu.colliders != null && enu.colliders.length)
-						{
-							// prepare to resolve collisions
-							all_colliders.push(enu);
-						}
+						// prepare to resolve collisions
+						all_colliders = all_colliders.concat(enu.GetColliders());
 						// Still exists, place is regnerated list
 						new_list.push(enu);
 					}
@@ -304,9 +291,9 @@ export class Game
 	*/
     public __REMOVEENTITY(ent:Entity) : void
 	{
-		this.all_entities[ent.__SLOT_NUM] = null;
-		delete this.id_to_entity[ent.__identifier];
-		this.recently_free_slots.push(ent.__SLOT_NUM);
+		this.all_entities[ent.GetProcessSlot()] = null;
+		delete this.id_to_entity[ent.GetIdentifier()];
+		this.recently_free_slots.push(ent.GetProcessSlot());
 	}
 	
 	/**

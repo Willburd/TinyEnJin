@@ -2,11 +2,10 @@ import {GAMEMODE,DEPTH_DEFAULT} from "./constants";
 import {Vector2} from "./vector";
 import {ColliderPoint,CollisionData} from "./collision";
 import {AnimationLength,DrawEntity,PointOutsideView} from "./tools";
-import {DESTROY} from "./destroy";
+import {entities_destroyed} from "./destroy";
 import {ctx} from "./render";
 import {Game} from "./engine";
-
-export let entities_created: number = 0;
+import * as TL from "../Engine/tools";
 
 /**
 * Gets the unique string id of the entity so it can be quickly referenced later by other entities.
@@ -22,42 +21,74 @@ export function GET_UNIQUE_ID(ent) : string
 export class Entity 
 {
 	// Internal
-	__identifier: string = "";
-	__SLOT_NUM: number = 0;
-	__destroyed: boolean = false;
-	__canvas = null;
-	PERSISTANT: boolean = false; // If it can survive destroy_all(), allowing it to exist between scenes.
-	PROCESSFLAGS: number = GAMEMODE.BASIC; // Bitflags that is used to check if this object processes during a frame. Such as if it processes while the game is paused.
-	RENDERFLAGS: number = GAMEMODE.ALL; // Bitflags, as above, but when the object renders.
-
+	private __identifier: string = "";
+	public GetIdentifier() : string {return this.__identifier;};
+	private __canvas = null;
+	public PERSISTANT: boolean = false; // If it can survive destroy_all(), allowing it to exist between scenes.
+	
 	// Core
-	ent_name: string = "";
-	position: Vector2 = new Vector2(0,0);
-	start_position: Vector2 = new Vector2(0,0);
-	prev_position: Vector2 = new Vector2(0,0);
-	depth: number = DEPTH_DEFAULT;		// Draw depth, higher numbers Draw closer to the screen
-	colliders: ColliderPoint[]|null = null;
+	public ent_name: string = "";
+	public position: Vector2 = new Vector2(0,0);
+	public start_position: Vector2 = new Vector2(0,0);
+	public prev_position: Vector2 = new Vector2(0,0);
+	public depth: number = DEPTH_DEFAULT;		// Draw depth, higher numbers Draw closer to the screen
 
 	// Drawing
-	sprite: string = "";
-	visible: boolean = true;
-	image_xscale: number = 1;
-	image_yscale: number = 1;
-	sprite_align: Vector2 = new Vector2(0,0); // Center offset of sprite
-	image_angle: number = 0; // rotation in degrees to Draw at
-	image_alpha: number = 1; // Transparency, with 1 being fully opaque
+	public sprite: string = "";
+	public visible: boolean = true;
+	public image_xscale: number = 1;
+	public image_yscale: number = 1;
+	public sprite_align: Vector2 = new Vector2(0,0); // Center offset of sprite
+	public image_angle: number = 0; // rotation in degrees to Draw at
+	public image_alpha: number = 1; // Transparency, with 1 being fully opaque
 
 	// Animation
-	animation_speed: number = 0;
-	frame: number = 0;
+	public animation_speed: number = 0;
+	public frame: number = 0;
+
+	// Processing State
+	public PROCESSFLAGS: number = GAMEMODE.BASIC; // Bitflags that is used to check if this object processes during a frame. Such as if it processes while the game is paused.
+	public RENDERFLAGS: number = GAMEMODE.ALL; // Bitflags, as above, but when the object renders.
+	private __SLOT_NUM: number = 0;
+	public AssignSlot(slot:number) {this.__SLOT_NUM = slot}; // Do not call unless you know what you are doing.
+	public GetProcessSlot() : number {return this.__SLOT_NUM;};
+
+	// Collision
+	protected colliders: ColliderPoint[]|null = null;
+	public GetColliders() : ColliderPoint[] {return this.colliders == null ? [] : this.colliders;};
+
+	// Destruction
+	private __destroyed: boolean = false;	
+	/**
+	* Destroy an entity
+	* @param {Entity} ent - Entity being destroyed
+	* @param {boolean} unloading - Special condition for unloading. Useful if you don't want to spawn effects when an object is unloaded, vs destroyed in some other way like gameplay.
+	* @returns {void}
+	*/
+	public DESTROY(unloading:boolean = false) : void 
+	{
+		if(this.__destroyed == true) return;
+		//console.log("DESTROY ENTITY: " + ent.__identifier + " slot: " + ent.__SLOT_NUM);
+		this.OnDestroy(unloading);
+		Game.active_game.__REMOVEENTITY(this);
+		Game.entities_destroyed++;
+		this.__destroyed = true
+		this.__SLOT_NUM = -1;
+		this.__canvas = null;
+		if(this.colliders != null) 
+		{
+			delete this.colliders;
+		}
+		this.colliders = null;
+	};
+	public IsDestroyed() : boolean {return this.__destroyed;};
 
 	/**
 	* Initilizes the entity to a base state.
 	* @param {number} start_x - Entity's initial x position
 	* @param {number} start_y - Entity's initial y position
-	* @returns {void}
 	*/
-	constructor(start_x: number,start_y: number) 
+	constructor(start_x: number,start_y: number)
 	{
 		// Onto creation!
 		this.__canvas = ctx;
@@ -65,25 +96,36 @@ export class Entity
 		this.start_position = new Vector2(start_x,start_y);
 		this.prev_position = new Vector2(start_x,start_y);
 		Game.active_game.__ADDENTITY(this);
-		entities_created++;
+		Game.entities_created++;
 	}
 
 	/**
 	* Custom Init code. Can be safely overridden.
 	* @returns {void}
 	*/
-	OnInit() {};
+	__INTERNAL_INIT(new_slot:number) : void
+	{
+		this.__SLOT_NUM = new_slot;
+		this.__identifier = btoa(TL.Rand(1,999999999).toString() + Game.active_game.__PREVIOUS_UPDATE_MS.toString() + Game.entities_created.toString() + Game.entities_destroyed.toString());
+		this.OnInit();
+	};
+
+	/**
+	* Custom Init code. Can be safely overridden.
+	* @returns {void}
+	*/
+	protected OnInit() : void {};
 	
 	/**
 	* Custom early update code. Can be safely overridden. Happens before an entity runs __INTERNAL_UPDATE();
 	* @returns {void}
 	*/
-	EarlyUpdate() {};
+	public EarlyUpdate() {};
 	/**
 	* Entity internal update. Handles processing of automatically adjusted vars, or functions called by an entity's state.
 	* @returns {void}
 	*/
-	__INTERNAL_UPDATE() 
+	public __INTERNAL_UPDATE() 
 	{
 		let len = AnimationLength(this.sprite)
 		let frame_before = this.frame;
@@ -94,31 +136,31 @@ export class Entity
 	* Custom update code. Can be safely overridden.
 	* @returns {void}
 	*/
-	Update() {};
+	public Update() : void {};
 	/**
 	* Custom late update code. Can be safely overridden.
 	* @returns {void}
 	*/
-	LateUpdate() {};
+	public LateUpdate() : void {};
 
 	/**
 	* Collision behavior. Called when a collider overlaps or collides with other colliders, called seperately for each collision registered with each collider.
 	* @param {CollisionData} collision_data - Data of the collision that happened.
 	* @returns {void}
 	*/
-	OnCollision(collision_data: CollisionData) {};
+	protected OnCollision(collision_data: CollisionData) {};
 
 	
 	/**
 	* Custom early draw code. Can be safely overridden.
 	* @returns {void}
 	*/
-	EarlyDraw() {};
+	public EarlyDraw() : void {};
 	/**
 	* Custom draw code. Can be safely overridden. By default, it will draw the current sprite at the current x and y position. Use the depth variable to change an entity's draw order in relation to other entities.
 	* @returns {void}
 	*/
-	Draw()
+	public Draw() : void
 	{
 		DrawEntity(this);
 	};
@@ -126,19 +168,19 @@ export class Entity
 	* Custom late draw code. Can be safely overridden.
 	* @returns {void}
 	*/
-	LateDraw() {};
+	public LateDraw() : void {};
 
 	/**
 	* Custom cleanup, unloading is set during DESTROY_ALL or if outside of view edge and can be used to hid destruction effects, etc. Can be safely overridden.
 	* @returns {void}
 	*/
-	OnDestroy(unloading: boolean) {};
+	protected OnDestroy(unloading: boolean) : void {};
 
 	/**
 	* Triggers each time the animation loop reaches the length of it's animation. Only for built in animation_speed. Can be safely overridden.
 	* @returns {void}
 	*/
-	OnAnimationLoop() {};
+	protected OnAnimationLoop() {};
 }
 
 export class GameObj extends Entity 
@@ -151,7 +193,7 @@ export class GameObj extends Entity
 		super.__INTERNAL_UPDATE();
 		this.prev_position = this.position.Copy();
 		this.position.Add(this.SPEED);
-		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.position.x,this.position.y,this.VIEW_EDGE_LIMIT)) DESTROY(this,true);
+		if(this.VIEW_EDGE_LIMIT >= 0 && PointOutsideView(this.position.x,this.position.y,this.VIEW_EDGE_LIMIT)) this.DESTROY(true);
 	};
 }
 

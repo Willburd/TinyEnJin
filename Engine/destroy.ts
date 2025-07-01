@@ -4,32 +4,6 @@ import {Game} from "./engine";
 export let entities_destroyed = 0;
 
 /**
-* Destroy an entity
-* @param {Entity} ent - Entity being destroyed
-* @param {boolean} unloading - Special condition for unloading. Useful if you don't want to spawn effects when an object is unloaded, vs destroyed in some other way like gameplay.
-* @returns {void}
-*/
-export function DESTROY(ent:Entity,unloading:boolean = false): void
-{
-    if(ent.__destroyed)
-        return
-	// Removal
-    Game.active_game.__REMOVEENTITY(ent);
-	// Cleanup
-	//console.log("DESTROY ENTITY: " + ent.__identifier + " slot: " + ent.__SLOT_NUM);
-    ent.__SLOT_NUM = -1;
-    ent.OnDestroy(unloading);
-    if(ent.colliders != null) 
-    {
-        delete ent.colliders;
-    }
-    ent.colliders = null;
-    ent.__destroyed = true;
-    ent.__canvas = null;
-    entities_destroyed++;
-};
-
-/**
 * Destroy all entities
 * @param {boolean} unloading - Special condition for unloading. Useful if you don't want to spawn effects when an object is unloaded, vs destroyed in some other way like gameplay.
 * @param {boolean} forced - Forces all entities to be destroyed, including ones protected by PERSISTANT being true.
@@ -39,16 +13,16 @@ export function DESTROY_ALL(unloading:boolean,forced:boolean) : void
 {
     let new_list = [];
 	Game.active_game.GetEntityList().forEach(element => {
-        if(element != null && !element.__destroyed)
+        if(element != null && !element.IsDestroyed())
         {
             if(!element.PERSISTANT || forced)
             {
-                DESTROY(element,unloading);
+                element.DESTROY(unloading);
             }
             else
             {
                 // Re-add to list, apply new ID
-                element.__SLOT_NUM = new_list.length;
+                element.AssignSlot(new_list.length);
                 new_list.push(element);
             }
         }
