@@ -141,7 +141,7 @@ export class Entity
 	OnAnimationLoop() {};
 }
 
-class GameObj extends Entity 
+export class GameObj extends Entity 
 {
 	SPEED: Vector2 = new Vector2(0,0); // Automatic x/y movement, does not handle collision(yet?)
 	VIEW_EDGE_LIMIT: number = -1; // If above 0, will be destroyed if it goes outside of the view + this as padding
@@ -155,7 +155,7 @@ class GameObj extends Entity
 	};
 }
 
-class Tile extends Entity 
+export class Tile extends Entity 
 {
 	// Spot in tileset
 	tx: number = 0;
@@ -175,7 +175,7 @@ class Tile extends Entity
 	}
 }
 
-class Background extends Entity
+export class Background extends Entity
 {
 	constructor(start_x: number,start_y: number,spr,dep: number) 
 	{

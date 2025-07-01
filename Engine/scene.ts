@@ -24,22 +24,22 @@ export function START_SCENE(new_scene:Scene)
 
 export class Scene {
     // View scrolling
-    view_position = new Vector2(0,0);
+    view_position:Vector2 = new Vector2(0,0);
 
-    static_collision_map = []; // Collision 2d array for static collisions
-    static_col_resolution = 16; // Pixels per collision index
+    static_collision_map:Array<any> = []; // Collision 2d array for static collisions
+    static_col_resolution:number = 16; // Pixels per collision index
 
 	/**
 	* Custom Init code. Can be safely overridden.
 	* @returns {void}
 	*/
-    Init() {};
+    Init() : void {};
 
 	/**
 	* Custom Update code. Can be safely overridden.
 	* @returns {void}
 	*/
-    Update() {};
+    Update() : void {};
 
 	/**
 	* If this scene has unique logic when loading the next scene. Entities from the prior scene will already have already been destroyed when this is called. See OnDestroy() for sending data of non-persistant objects between scenes. Can be safely overridden.
@@ -47,22 +47,22 @@ export class Scene {
     * @param {object} data - A custom object from the previous scene's OnDestroy() function. Can be used to transfer information on entities that existed in the scene, without devoting logic to do so in the scene itself.
 	* @returns {void}
 	*/
-    OnTransfer(old_scene,data) {};
+    OnTransfer(old_scene:Scene,data:Object) : void {};
 
 	/**
 	* Called when a scene ends. Before all entities are destroyed. Can be used to collect information about the scene's state or entities before OnTransfer sends the data to the next scene. Can be safely overridden.
-	* @returns {object} Optional data that will be sent to the 
+	* @returns {object} Optional data that will be sent to the next scene
 	*/
-    OnDestroy() 
+    OnDestroy(): object 
     { 
         return {};
     };
 
 	/**
 	* Returns html color to clear the screen with each frame.
-	* @returns {color}
+	* @returns {string}
 	*/
-    DefaultDrawColor()
+    DefaultDrawColor():string
     {
         return "#00000000"; // Clear alpha
     }
