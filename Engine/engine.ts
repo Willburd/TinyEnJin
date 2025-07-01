@@ -14,14 +14,15 @@ import {__RESOLVE_COLLISIONS} from "./collision";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 window.addEventListener("load", () => {
 	// This is literally the first code that runs!
+	console.log("Getting tipsy with EnJin...");
 	__CREATE_RENDER_CONTEXT();
 	__INTERNAL_LOADING();
 });
 /**
 * Load assets, makes sure everything gets done instead of blindly trusting the page to be loaded instantly!
-* @returns {void}
+* @returns {number}
 */
-export function __INTERNAL_LOADING()
+export function __INTERNAL_LOADING(): number
 {
 	if(__IMGS_TOTAL > 0) console.log("Loading progress: " + __LOAD_PROGRESS());
 	if(__IMGS_ERR > 0) 
@@ -30,7 +31,11 @@ export function __INTERNAL_LOADING()
 		return;
 	}
 	if(!__LOAD_ASSETS()) return requestAnimationFrame(__INTERNAL_LOADING);
-	new Event("__SETUP"); // Must be defined in PROJECT
+	console.log("Asset loading complete: " + __IMGS_TOTAL);
+	console.log("Turning over...");
+	// Finally, end of the startup code. We trigger the game object to spawn by sending a signal.
+	// The project itself will impliment this in its files instead of the engine. This starts the game.
+	dispatchEvent(new Event("__SETUP"));
 };
 
 // Setup input handler

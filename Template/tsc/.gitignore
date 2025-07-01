@@ -1,0 +1,3 @@
+# Ignore compiled TS
+*.js
+*.js.map
