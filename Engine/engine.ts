@@ -68,7 +68,6 @@ export function __FRAME(currentTimeMs:number, forced:boolean = false) : void
 {
 	if(!forced) requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
-	// Requires focus to play, or GC gets really unhappy
 	const deltaTimeMs = currentTimeMs - Game.active_game.__PREVIOUS_UPDATE_MS;
 	if (deltaTimeMs >= Game.active_game.__UPDATE_RATE_MS || forced) {
 		if(!forced && SHOW_FPS)
@@ -119,7 +118,7 @@ export class Game
 			console.error("MULTIPLE GAMES ATTEMPTED TO START");
 			return
 		}
-		console.error("GAMESTARTED");
+		console.log("GAMESTARTED");
 		Game.active_game = this;
 		this.__UPDATE_RATE_MS = 1000 / Game.active_game.__UPDATERATE;
 		this.Init();
