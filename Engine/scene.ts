@@ -7,7 +7,7 @@ import {Game, __FRAME} from "./engine";
 * @param {Scene} new_scene - Newly created Scene instance.
 * @returns {void}
 */
-export function START_SCENE(new_scene:Scene)
+export function START_SCENE(new_scene:Scene) : void
 {
     let old_scene = Game.active_scene;
     if(old_scene != null)

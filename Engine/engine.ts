@@ -64,7 +64,7 @@ const times:number[] = [];
 * @param {boolean} forced - If this function is called manually, this will need to be set to true to ignore deltatime likely missing the update tick.
 * @returns {void}
 */
-export function __FRAME(currentTimeMs:number, forced:boolean = false)
+export function __FRAME(currentTimeMs:number, forced:boolean = false) : void
 {
 	if(!forced) requestAnimationFrame(__FRAME);
 	if(!document.hasFocus()) return;
@@ -119,6 +119,7 @@ export class Game
 			console.error("MULTIPLE GAMES ATTEMPTED TO START");
 			return
 		}
+		console.error("GAMESTARTED");
 		Game.active_game = this;
 		this.__UPDATE_RATE_MS = 1000 / Game.active_game.__UPDATERATE;
 		this.Init();
