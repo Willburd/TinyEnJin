@@ -3,5 +3,5 @@
     "module": "CommonJS",
     "target": "ES6"
   },
-  "include": ["../Engine/*.js","*.js"]
+  "include": ["./*"]
 }

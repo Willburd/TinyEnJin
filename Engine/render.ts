@@ -1,18 +1,22 @@
-let main_canvas;
-let ctx;
+import {DRAW_STATIC_COLLIDERS,DRAW_COLLIDERS} from "../Engine/constants";
+import {Game,fps,SHOW_FPS} from "../Engine/engine";
+import {DrawStaticColliders} from "./collision";
+
+export let main_canvas: HTMLCanvasElement;
+export let ctx: CanvasRenderingContext2D;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Render setup and context creation
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
 * Constructs the render context from the canvas.
-* @returns {null}
+* @returns {void}
 */
-const __CREATE_RENDER_CONTEXT = () =>
+export function __CREATE_RENDER_CONTEXT() : void
 {
 	// Get the canvas from the webpage. Complains if it cannot, but if it fails you have worse to worry about.
-	main_canvas = document.getElementById("main_surface");
-	ctx = main_canvas.getContext('2d');
+	main_canvas = document.getElementById("main_surface") as HTMLCanvasElement;
+	ctx = main_canvas.getContext('2d') as CanvasRenderingContext2D;
 	if (!ctx) console.error("Failed to get the rendering context for 2D canvas");
 }
 
@@ -20,7 +24,7 @@ const __CREATE_RENDER_CONTEXT = () =>
 * Renders each frame based on data in the game's current depth_sort array.
 * @returns {number} The number of entities rendered this frame
 */
-const __RENDER = () => {
+export function __RENDER() : number {
 	// Clear canvas
 	ctx.clearRect(0, 0, main_canvas.width, main_canvas.height);
 	ctx.beginPath();
@@ -33,7 +37,7 @@ const __RENDER = () => {
 
 	let rendered_ents = 0;
 	// Draw objects
-	Game.active_game.depth_sort.forEach(sub_array => {
+	Game.active_game.GetRenderList().forEach(sub_array => {
 		if(sub_array.length > 0)
 		{
 			sub_array.forEach(enr => {
@@ -45,7 +49,7 @@ const __RENDER = () => {
 			});
 			sub_array.forEach(enr => {
 				enr.LateDraw();
-				if(DRAW_COLLIDERS && enr.colliders != null && enu.colliders.length) 
+				if(DRAW_COLLIDERS && enr.colliders != null && enr.colliders.length) 
 				{
 					enr.colliders.forEach(collid => {
 						collid.DrawCollider(enr);
