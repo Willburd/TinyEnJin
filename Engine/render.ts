@@ -1,5 +1,5 @@
-import {DRAW_STATIC_COLLIDERS,DRAW_COLLIDERS} from "../Engine/constants";
-import {Game,fps,SHOW_FPS} from "../Engine/engine";
+import {DRAW_STATIC_COLLIDERS,DRAW_COLLIDERS} from "./constants";
+import {Game,fps,SHOW_FPS} from "./engine";
 import {DrawStaticColliders} from "./collision";
 
 export let main_canvas: HTMLCanvasElement;

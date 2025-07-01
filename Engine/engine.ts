@@ -100,9 +100,9 @@ export class Game
 	private depth_sort:Array<Array<Entity>> = [];
 	private all_entities:Array<Entity> = [];
 	private recently_free_slots:number[] = [];
-	protected id_to_entity = {};
+	protected id_to_entity:Record<string,Entity> = {};
 	
-	private __UPDATERATE = 60; // Updates per second, browser sets fps
+	private __UPDATERATE:number = 60; // Updates per second, browser sets fps
 
 	/**
 	* Starts game and begins Update loop

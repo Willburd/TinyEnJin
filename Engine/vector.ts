@@ -1,5 +1,5 @@
-import {AXIS} from "../Engine/constants";
-import {MoveToward,PointDistance,FindAngle} from "../Engine/tools";
+import {AXIS} from "./constants";
+import {MoveToward,PointDistance,FindAngle} from "./tools";
 
 export class Vector2 {
 	x: number = 0;

@@ -1,5 +1,5 @@
-import {ctx} from "../Engine/render";
-import {Game} from "../Engine/engine";
+import {ctx} from "./render";
+import {Game} from "./engine";
 
 export let sprite_data = {};
 

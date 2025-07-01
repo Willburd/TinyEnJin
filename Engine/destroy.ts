@@ -1,5 +1,5 @@
-import {Entity} from "../Engine/entity";
-import {Game} from "../Engine/engine";
+import {Entity} from "./entity";
+import {Game} from "./engine";
 
 export let entities_destroyed = 0;
 

@@ -1,9 +1,9 @@
-import {BLENDMODE} from "../Engine/constants";
-import {Game,isKeyHeld} from "../Engine/engine";
-import {sprite_data,__DRAWSPRITE} from "../Engine/sprites";
-import {main_canvas} from "../Engine/render";
-import {Vector2} from "../Engine/vector";
-import {Entity} from "../Engine/entity";
+import {BLENDMODE} from "./constants";
+import {Game,isKeyHeld} from "./engine";
+import {sprite_data,__DRAWSPRITE} from "./sprites";
+import {main_canvas} from "./render";
+import {Vector2} from "./vector";
+import {Entity} from "./entity";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Proximity

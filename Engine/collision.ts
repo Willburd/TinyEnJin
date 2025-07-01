@@ -1,10 +1,10 @@
-import {COLLIDERTYPE_POINT,COLLIDERTYPE_RECTANGLE,COLLIDERTYPE_CIRCLE,COLLIDERTYPE_RAYCAST,RAYCAST_ITERATIONS} from "../Engine/constants";
-import {Vector2} from "../Engine/vector";
-import {Entity} from "../Engine/entity";
-import {DrawDebugDot} from "../Engine/sprites";
-import {PointInsideCircle,PointInsideRectangle,PointDistance,rectangle_inside_rectangle,circle_inside_circle,rectangle_inside_circle,MoveToward} from "../Engine/tools";
-import {ctx} from "../Engine/render";
-import {Game} from "../Engine/engine";
+import {COLLIDERTYPE_POINT,COLLIDERTYPE_RECTANGLE,COLLIDERTYPE_CIRCLE,COLLIDERTYPE_RAYCAST,RAYCAST_ITERATIONS} from "./constants";
+import {Vector2} from "./vector";
+import {Entity} from "./entity";
+import {DrawDebugDot} from "./sprites";
+import {PointInsideCircle,PointInsideRectangle,PointDistance,rectangle_inside_rectangle,circle_inside_circle,rectangle_inside_circle,MoveToward} from "./tools";
+import {ctx} from "./render";
+import {Game} from "./engine";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dynamic collisions
