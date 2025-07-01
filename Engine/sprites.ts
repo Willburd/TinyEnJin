@@ -1,10 +1,13 @@
-let sprite_data = {};
+import {ctx} from "./render";
+import {Game} from "./engine";
+
+export let sprite_data = {};
 
 /**
 * Handles loading assets. If no assets have been flagged for loading, call setup functions to start loading.
 * @returns {boolean} If all assets have been loaded.
 */
-const __LOAD_ASSETS = () =>
+export function __LOAD_ASSETS() : boolean
 {   
 	if(__IMGS_TOTAL == 0)
 	{
@@ -19,21 +22,21 @@ const __LOAD_ASSETS = () =>
 * Gets progress of asset loading.
 * @returns {number} Percent from 0 to 1
 */
-const __LOAD_PROGRESS = () =>
+export function __LOAD_PROGRESS() : number
 {
 	return __IMGS_LOADED / __IMGS_TOTAL;
 }
 
 // Sprite loading handled here
-let __IMGS_TOTAL = 0;
-let __IMGS_LOADED = 0;
-let __IMGS_ERR = 0;
+export let __IMGS_TOTAL:number = 0;
+export let __IMGS_LOADED:number = 0;
+export let __IMGS_ERR:number = 0;
 
 /**
 * Constructs the sprite library from all images on the page.
-* @returns {null}
+* @returns {void}
 */
-const __INIT_SPRITE_LIBRARY = () =>
+export function __INIT_SPRITE_LIBRARY(): void
 {
 	const all_images = document.getElementsByTagName("img");
 	for (let index = 0; index < all_images.length; ++index) {
@@ -46,9 +49,9 @@ const __INIT_SPRITE_LIBRARY = () =>
 /**
 * Handles loading state of html images, passing them to __LOAD_IMG_FINALIZE() when they are ready for processing.
 * @param {Element} img - Html img element
-* @returns {null}
+* @returns {void}
 */
-const __INIT_SPRITE = (img) =>
+export function __INIT_SPRITE(img): void
 {
 	if(img.complete) // Was ready before the script called it.
 	{
@@ -64,10 +67,10 @@ const __INIT_SPRITE = (img) =>
 
 /**
 * Converts a html img element into sprite data for use in the game.
-* @param {Element} img - Html img element
-* @returns {null}
+* @param {HTMLImageElement} img - Html img element
+* @returns {void}
 */
-const __LOAD_IMG_FINALIZE = (img) =>
+function __LOAD_IMG_FINALIZE(img:HTMLImageElement): void
 {
 	let nm = img.id;
 	let wid = img.width;
@@ -92,9 +95,9 @@ const __LOAD_IMG_FINALIZE = (img) =>
 * @param {number} align_h - The x offset of the sprite, from the object's x position.
 * @param {number} align_v - The y offset of the sprite, from the object's y position.
 * @param {number} angle - The angle the sprite is drawn at. (CURRENTLY WIP)
-* @returns {null}
+* @returns {void}
 */
-const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, align_h = 0,align_v = 0,angle = 0) =>
+export function __DRAWSPRITE(context:CanvasRenderingContext2D,spr:string,frame:number,x:number,y:number,alpha:number = 1, xscale:number = 1, yscale:number = 1, align_h:number = 0,align_v:number = 0,angle:number = 0)
 {
 	if(context == undefined || spr == "" || xscale == 0 || yscale == 0) 
 		return; // No.
@@ -153,7 +156,7 @@ const __DRAWSPRITE = (context,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, a
 	context.globalAlpha = 1;
 }
 
-const DrawDebugDot = (x,y) =>
+export function DrawDebugDot(x:number,y:number): void
 {
 	ctx.beginPath();
 	ctx.arc(x - Game.active_scene.view_position.x, y - Game.active_scene.view_position.y, 1, 0, 2 * Math.PI);

@@ -1,3 +1,10 @@
+import {BLENDMODE} from "./constants";
+import {Game,isKeyHeld} from "./engine";
+import {sprite_data,__DRAWSPRITE} from "./sprites";
+import {main_canvas} from "./render";
+import {Vector2} from "./vector";
+import {Entity} from "./entity";
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Proximity
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,7 +19,8 @@
 * @param {number} bry - bottom right y boundary.
 * @returns {Vector2}
 */
-const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
+export function ConstrainPoint(x:number,y:number,tlx:number,tly:number,brx:number,bry:number) : Vector2 
+{
     let pr = new Vector2(x,y);
     if(x < tlx) pr.x = tlx;
     if(x > brx) pr.x = brx;
@@ -30,7 +38,7 @@ const ConstrainPoint = (x,y,tlx,tly,brx,bry) => {
 * @param {number} bry - bottom right y boundary.
 * @returns {Vector2}
 */
-const ConstrainEntity = (ent,tlx,tly,brx,bry) => {
+export function ConstrainEntity(ent:Entity,tlx:number,tly:number,brx:number,bry:number) : Vector2 {
     return ConstrainPoint(ent.position.x,ent.position.y,tlx,tly,brx,bry);
 }
 
@@ -42,7 +50,7 @@ const ConstrainEntity = (ent,tlx,tly,brx,bry) => {
 * @param {number} y2 - Second point's y position.
 * @returns {number} Distance between the points.
 */
-const PointDistance = (x1,y1,x2,y2) => 
+export function PointDistance(x1:number,y1:number,x2:number,y2:number) : number
 {
     return Math.abs(Math.sqrt( ((x1 - x2) ** 2) + ((y1 - y2) ** 2))); // Pythag!
 }
@@ -54,7 +62,7 @@ const PointDistance = (x1,y1,x2,y2) =>
 * @param {number} percent - the percent between the two points, with 0 returning the start, 1 returning the end, and 0.5 being halfway between them.
 * @returns {number}
 */
-const Lerp = (start, end, percent) =>
+export function Lerp(start: number, end: number, percent: number) : number
 {
     return (start * (1 - percent)) + (end * percent);
 }
@@ -65,7 +73,8 @@ const Lerp = (start, end, percent) =>
 * @param {number} round - the incriment to round to.
 * @returns {number}
 */
-const RoundToIncriment = (val,round) => {
+export function RoundToIncriment(val,round) : number
+{
     return Math.round(val / round) * round;
 }
 
@@ -75,7 +84,8 @@ const RoundToIncriment = (val,round) => {
 * @param {number} round - the incriment to floored to.
 * @returns {number}
 */
-const FloorToIncriment = (val,round) => {
+export function FloorToIncriment(val,round) : number 
+{
     return Math.floor(val / round) * round;
 }
 
@@ -85,7 +95,8 @@ const FloorToIncriment = (val,round) => {
 * @param {number} round - the incriment to ceil to.
 * @returns {number}
 */
-const CeilToIncriment = (val,round) => {
+export function CeilToIncriment(val,round) :  number
+{
     return Math.ceil(val / round) * round;
 }
 
@@ -103,7 +114,8 @@ const CeilToIncriment = (val,round) => {
 * @param {number} bry - rectangle's bottom right y boundary.
 * @returns {boolean} If the point is within the rectangle.
 */
-const PointInsideRectangle = (x,y,tlx,tly,brx,bry) => {
+export function PointInsideRectangle(x,y,tlx,tly,brx,bry) : boolean
+{
     if(x <= tlx || x >= brx || y <= tly || y >= bry) return false;
     return true;
 }
@@ -120,7 +132,8 @@ const PointInsideRectangle = (x,y,tlx,tly,brx,bry) => {
 * @param {number} bry2 - other rectangle's bottom right y boundary.
 * @returns {boolean} If the rectangles overlap.
 */
-const rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
+export function rectangle_inside_rectangle(tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) : boolean
+{
     let center_x = tlx + ((brx - tlx)*0.5);
     let center_y = tly + ((bry - tly)*0.5);
     if(PointInsideRectangle(center_x,center_y,tlx2,tly2,brx2,bry2)) return true; // Center
@@ -142,7 +155,8 @@ const rectangle_inside_rectangle = (tlx,tly,brx,bry,tlx2,tly2,brx2,bry2) => {
 * @param {number} rad - the radius of the circle
 * @returns {boolean} If the rectangle and circle overlap.
 */
-const rectangle_inside_circle = (tlx,tly,brx,bry,cx,cy,rad) => {
+export function rectangle_inside_circle(tlx,tly,brx,bry,cx,cy,rad) : boolean
+{
     if(PointInsideRectangle(cx,cy,tlx,tly,brx,bry)) return true; // Center
     if(PointInsideCircle(tlx,tly,cx,cy,rad)) return true; // TL
     if(PointInsideCircle(brx,tly,cx,cy,rad)) return true; // TR
@@ -160,7 +174,8 @@ const rectangle_inside_circle = (tlx,tly,brx,bry,cx,cy,rad) => {
 * @param {number} rad - the radius of the circle
 * @returns {boolean} If the point overlaps the circle
 */
-const PointInsideCircle = (x,y,cx,cy,rad) => {
+export function PointInsideCircle(x,y,cx,cy,rad) : boolean
+{
     return PointDistance(x,y,cx,cy) <= rad;
 }
 
@@ -174,7 +189,8 @@ const PointInsideCircle = (x,y,cx,cy,rad) => {
 * @param {number} rad2 - the radius of the other circle
 * @returns {boolean} If the circles overlap
 */
-const circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
+export function circle_inside_circle(cx,cy,rad,cx2,cy2,rad2) : boolean
+{
     return PointInsideCircle(cx,cy,cx2,cy2,rad + rad2);
 }
 
@@ -185,7 +201,8 @@ const circle_inside_circle = (cx,cy,rad,cx2,cy2,rad2) => {
 * @param {number} pad - A padding distance around the view, that is considered to still be inside of the view.
 * @returns {boolean} If the point is within the view or the padding specified.
 */
-const PointInsideView = (x,y,pad) => {
+export function PointInsideView(x,y,pad) : boolean
+{
     return PointInsideRectangle(x,y, Game.active_scene.view_position.x - pad, Game.active_scene.view_position.y - pad, Game.active_scene.view_position.x + ViewWidth() + pad, Game.active_scene.view_position.y + ViewHeight() + pad);
 }
 
@@ -196,7 +213,8 @@ const PointInsideView = (x,y,pad) => {
 * @param {number} pad - A padding distance around the view, that is considered to still be inside of the view.
 * @returns {boolean} If the point is outside the view and the padding specified.
 */
-const PointOutsideView = (x,y,pad) => {
+export function PointOutsideView(x,y,pad) : boolean
+{
     return !PointInsideView(x,y,pad);
 }
 
@@ -212,7 +230,8 @@ const PointOutsideView = (x,y,pad) => {
 * @param {number} y2 - Second point's y position.
 * @returns {number} Angle from the first point to the second in degrees.
 */
-const FindAngle = (x1,y1,x2,y2) => {
+export function FindAngle(x1,y1,x2,y2) : number
+{
     return (360 + (Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI)) % 360; // ALWAYS positive!
 }
 
@@ -222,7 +241,8 @@ const FindAngle = (x1,y1,x2,y2) => {
 * @param {Vector2} vec2 - Second point's position.
 * @returns {number} Angle from the first point to the second in degrees.
 */
-const FindVectorAngle = (vec1, vec2) => {
+export function FindVectorAngle(vec1, vec2) : number
+{
     return FindAngle(vec1.x,vec1.y,vec2.x,vec2.y);
 }
 
@@ -233,7 +253,8 @@ const FindVectorAngle = (vec1, vec2) => {
 * @param {Entity} ent - Entity to use the position of.
 * @returns {number} Angle from the first point to the entity's position. If it is unable to find an angle it will return -1
 */
-const AngleTo = (x,y,ent) => {
+export function AngleTo(x,y,ent) : number
+{
     if(ent == null) return -1;
     return FindAngle(x,y,ent.position.x,ent.position.y); 
 }
@@ -244,7 +265,8 @@ const AngleTo = (x,y,ent) => {
 * @param {number} distance - The distance to move along the angle provided.
 * @returns {Vector2}
 */
-const MoveToward = (angle,distance) => {
+export function MoveToward(angle,distance) : Vector2
+{
     if(angle < 0) return new Vector2(0,0);
     if(distance == 0) return new Vector2(0,0);
     let dir = angle / (180 / Math.PI);
@@ -256,7 +278,7 @@ const MoveToward = (angle,distance) => {
 * @param {number} angle - angle to create a vector from.
 * @returns {Vector2}
 */
-const VectorFromAngle = (angle) =>
+export function VectorFromAngle(angle) : Vector2
 {
     return MoveToward(angle,1);
 }
@@ -267,7 +289,8 @@ const VectorFromAngle = (angle) =>
 * @param {number} snap - The angle incriments that will be used to round the source angle.
 * @returns {number} The source angle rounded to the nearest incriment of the snap angle provided.
 */
-const AngleSnap = (angle, snap) => {
+export function AngleSnap(angle, snap) : number
+{
     return (Math.round(angle / snap) * snap);
 }
 
@@ -277,7 +300,8 @@ const AngleSnap = (angle, snap) => {
 * @param {number} max_index - The max number of segments desired. Usually the maximum number of rotation frames.
 * @returns {number} The current index from 0 to max_index that the angle would be if converted from degrees to segments.
 */
-const AngleToIndex = (angle, max_index) => {
+export function AngleToIndex(angle, max_index) : number
+{
     let angle_per_index = 360 / max_index;
     return (Math.round(angle / angle_per_index));
 }
@@ -290,9 +314,10 @@ const AngleToIndex = (angle, max_index) => {
 * @param {string} rightkey Right keyboard key.
 * @returns {Vector2} A non-normalized vector representing the current inputs of up down left and right.
 */
-const GetInputVector = (upkey,downkey,leftkey,rightkey) => {
-    let UD = isKeyHeld(downkey) - isKeyHeld(upkey);
-    let LR = isKeyHeld(rightkey) - isKeyHeld(leftkey);
+export function GetInputVector(upkey:string,downkey:string,leftkey:string,rightkey:string) : Vector2
+{
+    let UD = (isKeyHeld(downkey) ? 1 : 0) - (isKeyHeld(upkey) ? 1 : 0) ;
+    let LR = (isKeyHeld(rightkey) ? 1 : 0)  - (isKeyHeld(leftkey) ? 1 : 0) ;
     return new Vector2( LR, UD);
 }
 
@@ -304,23 +329,25 @@ const GetInputVector = (upkey,downkey,leftkey,rightkey) => {
 * Get the width of the game's viewport
 * @returns {number}
 */
-const ViewWidth = () => {
+export function ViewWidth() : number
+{
     return main_canvas.width
 }
 /**
 * Get the height of the game's viewport
 * @returns {number}
 */
-const ViewHeight = () => {
+export function ViewHeight() : number
+{
     return main_canvas.height
 }
 
 /**
 * Draws an entity using it's current properties.
 * @param {Entity} ent - The source entity to draw.
-* @returns {null}
+* @returns {void}
 */
-const DrawEntity = (ent) =>
+export function DrawEntity(ent)
 {
     __DRAWSPRITE(ent.__canvas,ent.sprite,ent.frame,
                 ent.position.x,
@@ -344,9 +371,9 @@ const DrawEntity = (ent) =>
 * @param {number} align_h - The x offset of the sprite, from the object's x position.
 * @param {number} align_v - The y offset of the sprite, from the object's y position.
 * @param {number} angle - The angle the sprite is drawn at. (CURRENTLY WIP)
-* @returns {null}
+* @returns {void}
 */
-const DrawSprite = (draw_canvas,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1, align_h = 0,align_v = 0,angle = 0) =>
+export function DrawSprite(draw_canvas: CanvasRenderingContext2D,spr: string,frame: number,x: number,y: number,alpha: number = 1, xscale: number = 1, yscale: number = 1, align_h: number = 0,align_v: number = 0,angle: number = 0)
 {
     __DRAWSPRITE(draw_canvas,spr,frame,
                 x,
@@ -362,7 +389,8 @@ const DrawSprite = (draw_canvas,spr,frame,x,y,alpha = 1, xscale = 1, yscale = 1,
 * @param {string} spr - The string id of the sprite.
 * @returns {number} The length of the sprite's animation in frames.
 */
-const AnimationLength = (spr) => {
+export function AnimationLength(spr:string) : number
+{
 	if(spr == "")
 		return 0;
 	let data = sprite_data[spr];
@@ -372,9 +400,9 @@ const AnimationLength = (spr) => {
 /**
 * Changing the blending mode globally, pass no arguments to reset it
 * @param {BLENDMODE} new_mode - BLENDMODE constant that will be the new blending mode.
-* @returns {null}
+* @returns {void}
 */
-const SetBlendMode = (new_mode = BLENDMODE_SOURCEOVER) =>
+export function SetBlendMode(context: CanvasRenderingContext2D, new_mode: GlobalCompositeOperation = BLENDMODE.SOURCEOVER) : void
 {
 	context.globalCompositeOperation = new_mode;
 }
@@ -389,7 +417,7 @@ const SetBlendMode = (new_mode = BLENDMODE_SOURCEOVER) =>
 * @param {number} end - The highest value, exclusive. It will not return this value, but come very close to it.
 * @returns {number}
 */
-const Rand = (start, end) =>
+export function Rand(start: number, end: number) : number
 {
     return Lerp(start, end, Math.random());
 }
@@ -398,7 +426,7 @@ const Rand = (start, end) =>
 * Gets a random angle from 0 to 360
 * @returns {number}
 */
-const RandomAngle = () =>
+export function RandomAngle() : number
 {
     return Rand(0,360);
 }
@@ -408,7 +436,7 @@ const RandomAngle = () =>
 * @param {number} percent - Percent threshold.
 * @returns {boolean}
 */
-const Prob = (percent) =>
+export function Prob(percent: number) : boolean
 {
     return (Math.random() * 100) < percent;
 }

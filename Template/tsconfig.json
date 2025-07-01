@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6",
+    "sourceMap": true,
+    "outDir": "tsc"
+  },
+  "include": ["game.ts"]
+}

@@ -1,3 +1,11 @@
+import {COLLIDERTYPE_POINT,COLLIDERTYPE_RECTANGLE,COLLIDERTYPE_CIRCLE,COLLIDERTYPE_RAYCAST,RAYCAST_ITERATIONS} from "./constants";
+import {Vector2} from "./vector";
+import {Entity} from "./entity";
+import {DrawDebugDot} from "./sprites";
+import {PointInsideCircle,PointInsideRectangle,PointDistance,rectangle_inside_rectangle,circle_inside_circle,rectangle_inside_circle,MoveToward} from "./tools";
+import {ctx} from "./render";
+import {Game} from "./engine";
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dynamic collisions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6,9 +14,10 @@
  * Internal collision resolution
  * @param {Entity} caller
  * @param {Array<Entity>} all_colliders
- * @returns {null}
+ * @returns {void}
  */
-const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
+export function __RESOLVE_COLLISIONS(caller:Entity,all_colliders:Array<Entity>)
+{
 	// Dynamic collisions. Static collisions are handled in Update() manually.
 	if(caller == null) return;
 	if(all_colliders.length <= 1) return;
@@ -23,7 +32,7 @@ const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 			// For each collision that happened, resolve them one by one, so this loop is not required to be made by EVERY time.
 			if(data_list.length > 0)
 			{
-				data_list.forEach(col_data => 
+				data_list.forEach((col_data: CollisionData) => 
 				{	
 					if(col_data.entity.__destroyed) return; // Already destroyed by something, drop out. All future collisions are irrelevant.
 					if(!col_data.other_entity.__destroyed) caller.OnCollision(col_data); // Only allow non destroyed entities to affect collision.
@@ -33,7 +42,7 @@ const __RESOLVE_COLLISIONS = (caller,all_colliders) => {
 	});
 };
 
-class ColliderPoint
+export class ColliderPoint
 {
 	/**
 	* Unique name for collider assigned in the constructor, used to identify which collider hit which collider when checking between two known objects.
@@ -99,11 +108,11 @@ class ColliderPoint
 	* @param {Entity} other
 	* @returns {boolean}
 	*/
-	CheckCollider(owner,other)
+	CheckCollider(owner : Entity,other : Entity)
 	{
-		let return_data = [];
-		let x = owner.position.x + this.offset.x;
-		let y = owner.position.y + this.offset.y;
+		let return_data: CollisionData[] = [];
+		let x: number = owner.position.x + this.offset.x;
+		let y: number = owner.position.y + this.offset.y;
 
 		other.colliders.forEach(other_collider => 
 		{
@@ -197,6 +206,7 @@ class ColliderPoint
 					if(this.height > 0)
 					{
 						// Check either the length of the raycast, or the number of RAYCAST_ITERATIONS along it if it is longer than RAYCAST_ITERATIONS!
+						let angle = this.width;
 						let check_distance = GetRayCastIterationDistance(this.height);
 						let check = new Vector2(x,y);
 						do {
@@ -206,8 +216,8 @@ class ColliderPoint
 								case COLLIDERTYPE_POINT:
 									if(Math.round(check.x) == Math.round(otherx) && Math.round(check.y) == Math.round(othery)) 
 									{
-										return_data.at_x = check.x;
-										return_data.at_y = check.y;
+										other_data.hit.x = check.x;
+										other_data.hit.y = check.y;
 										return_data.push(other_data);
 										continue;
 									}
@@ -217,8 +227,8 @@ class ColliderPoint
 									if(PointInsideRectangle(check.x,check.y, 
 															otherx, othery, otherx + other_collider.width, othery + other_collider.height)) 
 									{
-										return_data.at_x = check.x;
-										return_data.at_y = check.y;
+										other_data.hit.x = check.x;
+										other_data.hit.y = check.y;
 										return_data.push(other_data);
 										continue;
 									}
@@ -228,8 +238,8 @@ class ColliderPoint
 									if(PointInsideCircle(check.x,check.y, 
 														otherx, othery, other_collider.width)) 
 									{
-										return_data.at_x = check.x;
-										return_data.at_y = check.y;
+										other_data.hit.x = check.x;
+										other_data.hit.y = check.y;
 										return_data.push(other_data);
 										continue;
 									}
@@ -239,7 +249,7 @@ class ColliderPoint
 								break;
 							}
 						}
-						while(check.Magnitude() < dist)
+						while(check.Magnitude() < this.height)
 					}
 				break;
 			}
@@ -250,7 +260,7 @@ class ColliderPoint
 
 	/**
 	* @param {Entity} owner
-	* @returns {null}
+	* @returns {void}
 	*/
 	DrawCollider(owner)
 	{
@@ -302,12 +312,12 @@ class ColliderPoint
 	}
 }
 
-class ColliderRectangle extends ColliderPoint
+export class ColliderRectangle extends ColliderPoint
 {
 	collider_type = COLLIDERTYPE_RECTANGLE;
 }
 
-class ColliderCircle extends ColliderPoint
+export class ColliderCircle extends ColliderPoint
 {
 	collider_type = COLLIDERTYPE_CIRCLE;
 
@@ -317,7 +327,7 @@ class ColliderCircle extends ColliderPoint
 	}
 }
 
-class ColliderRayCast extends ColliderPoint
+export class ColliderRayCast extends ColliderPoint
 {
 	collider_type = COLLIDERTYPE_RAYCAST;
 
@@ -327,98 +337,98 @@ class ColliderRayCast extends ColliderPoint
 	}
 }
 
-class CollisionData
+export class CollisionData
 {
 	/**
 	* Identifier name of the collider checking for collisions.
 	* @type {string}
 	* @public
 	*/
-	id = "";
+	id: string = "";
 	
 	/**
 	* Identifier name of the collider detected in the collision.
 	* @type {string}
 	* @public
 	*/
-	other_id = "";
+	other_id: string = "";
 	
 	/**
 	* Instance of the entity that owns the source collider
 	* @type {Entity}
 	* @public
 	*/
-	entity = null
+	entity: Entity;
 	
 	/**
 	* Instance of the entity that owns the other collider
 	* @type {Entity}
 	* @public
 	*/
-	other_entity = null;
+	other_entity: Entity;
 	
 	/**
 	* Position of the collision. Usually just the source collider's x and y, but raycasts will give the exact x and y.
 	* @type {Vector2}
 	* @public
 	*/
-	at = new Vector2(0,0);
+	hit: Vector2 = new Vector2(0,0);
 
-	constructor(unique_id, other_unique_id, col_entity, other_col_entity, hit_x, hit_y)
+	constructor(unique_id:string, other_unique_id:string, col_entity:Entity, other_col_entity:Entity, hit_x:number, hit_y:number)
 	{
 		this.id = unique_id;
 		this.other_id = other_unique_id;
 		this.entity = col_entity;
 		this.other_entity = other_col_entity;
-		this.at.x = hit_x;
-		this.at.y = hit_y;
+		this.hit.x = hit_x;
+		this.hit.y = hit_y;
 	}
 }
 
-class StaticCollisionData
+export class StaticCollisionData
 {
 	/**
 	* Return value of the static collision data map. Can by anything put into the collision map.
 	* @type {any}
 	* @public
 	*/
-	value = 0;
+	value:any = 0;
 	
 	/**
 	* Start of the collision's cast. Usually just the check's x and y.
 	* @type {Vector2}
 	* @public
 	*/
-	start = new Vector2(0,0);
+	start:Vector2 = new Vector2(0,0);
 
 	/**
 	* Position of the collision. Usually just the check's x and y, but raycasts will give the exact x and y.
 	* @type {Vector2}
 	* @public
 	*/
-	at = new Vector2(0,0);
+	hit:Vector2 = new Vector2(0,0);
 
 	/**
 	* Position of the last position without a collision. Usually just the check's x and y, but raycasts will give the exact x and y.
 	* @type {Vector2}
 	* @public
 	*/
-	last_free = new Vector2(0,0);
+	last_free:Vector2 = new Vector2(0,0);
 	
 	/**
 	* The distance of each raycast.
 	* @type {Vector2}
 	* @public
 	*/
-	cast_length = new Vector2(0,0);
+	cast_length:Vector2 = new Vector2(0,0);
 
-	constructor(collision_value, start_x, start_y, hit_x, hit_y, free_x, free_y)
+	constructor(collision_value:any, start_x:number, start_y:number, hit_x:number, hit_y:number, free_x:number, free_y:number)
 	{
 		this.value = collision_value;
 		this.start.x = start_x;
 		this.start.y = start_y;
-		this.at.x = hit_x;
-		this.at.y = hit_y;
+		this.hit.x = hit_x;
+		this.hit.y = hit_y;
 		this.last_free.x = free_x;
 		this.last_free.y = free_y;
 	}
@@ -428,7 +438,7 @@ class StaticCollisionData
 	*/
 	MagnitudeHit()
 	{
-		return PointDistance(this.start.x,this.start.y,this.at.x,this.at.y);
+		return PointDistance(this.start.x,this.start.y,this.hit.x,this.hit.y);
 	}
 	
 	/** 
@@ -444,7 +454,7 @@ class StaticCollisionData
 	*/
 	GetCorrectionOffsets()
 	{
-		return new Vector2((this.at.x - this.start.x) - this.cast_length.x, (this.at.y - this.start.y) - this.cast_length.y);
+		return new Vector2((this.hit.x - this.start.x) - this.cast_length.x, (this.hit.y - this.start.y) - this.cast_length.y);
 	}
 }
 
@@ -452,7 +462,7 @@ class StaticCollisionData
 // Static collision map
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const static_col_checks = [];
+export const static_col_checks = [];
 
 /**
 * Gets the static collision data of a point in the world
@@ -460,7 +470,7 @@ const static_col_checks = [];
 * @param {number} y
 * @returns {StaticCollisionData}
 */
-const GetStaticCollision = (x,y) =>
+export function GetStaticCollision(x:number,y:number) : StaticCollisionData
 {
 	x = Math.floor(x);
 	y = Math.floor(y);
@@ -485,10 +495,9 @@ const GetStaticCollision = (x,y) =>
 * @param {number} y
 * @param {number} angle
 * @param {number} dist
-* @param {boolean} find_last_open - If true, the collision data will return the last free position found, instead of the point of collision.
 * @returns {StaticCollisionData}
 */
-const RayCastStaticCollision = (x,y,angle,dist) =>
+export function RayCastStaticCollision(x:number,y:number,angle:number,dist:number) : StaticCollisionData
 {
 	x = Math.floor(x);
 	y = Math.floor(y);
@@ -529,7 +538,7 @@ const RayCastStaticCollision = (x,y,angle,dist) =>
 * @param {number} dist - Length of the ray being cast
 * @returns {number} The distance between raycasting checks
 */
-const GetRayCastIterationDistance = (dist) => {
+export function GetRayCastIterationDistance(dist:number) : number {
 	// 
 	let check_distance = (dist / RAYCAST_ITERATIONS);
 	if(dist <= RAYCAST_ITERATIONS) check_distance = 1;
@@ -538,9 +547,9 @@ const GetRayCastIterationDistance = (dist) => {
 
 /**
 * Draws the static collision array, useful for testing tilesets, but too laggy to be used in actual gameplay.
-* @returns {null}
+* @returns {void}
 */
-const DrawStaticColliders = () => {
+export function DrawStaticColliders() : void {
 	if(Game.active_scene.static_collision_map.length > 0)
 	{
 		for (let yy = 0; yy < Game.active_scene.static_collision_map.length; yy++) {
