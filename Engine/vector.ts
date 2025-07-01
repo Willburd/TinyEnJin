@@ -16,7 +16,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.
 	*/
-	Add(vector,axis = AXIS.BOTH) : Vector2
+	Add(vector: Vector2,axis: number = AXIS.BOTH) : Vector2
 	{
 		if(axis & AXIS.X) this.x += vector.x;
 		if(axis & AXIS.Y) this.y += vector.y;
@@ -42,7 +42,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.
 	*/
-	Multiply(scaler,axis = AXIS.BOTH) : Vector2
+	Multiply(scaler: number,axis: number = AXIS.BOTH) : Vector2
 	{
 		if(axis & AXIS.X) this.x *= scaler;
 		if(axis & AXIS.Y) this.y *= scaler;
@@ -54,7 +54,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.
 	*/
-	Divide(denominator,axis = AXIS.BOTH) : Vector2
+	Divide(denominator: number,axis: number = AXIS.BOTH) : Vector2
 	{
 		if(axis & AXIS.X) this.x /= denominator;
 		if(axis & AXIS.Y) this.y /= denominator;
@@ -66,7 +66,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.
 	*/
-	Inverse(axis = AXIS.BOTH) : Vector2
+	Inverse(axis: number = AXIS.BOTH) : Vector2
 	{
 		if(axis & AXIS.X) this.x *= -1;
 		if(axis & AXIS.Y) this.y *= -1;
@@ -78,7 +78,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {Vector2} Returns this vector.
 	*/
-	Zero(axis = AXIS.BOTH) : Vector2
+	Zero(axis: number = AXIS.BOTH) : Vector2
 	{
 		if(axis & AXIS.X) this.x = 0;
 		if(axis & AXIS.Y) this.y = 0;
@@ -90,7 +90,7 @@ export class Vector2 {
 	* @param {number} acc - Adds the provided number to the vector's current magnitude without changing heading.
 	* @returns {Vector2} Returns this vector.
 	*/
-	Accelerate(acc,axis = AXIS.BOTH) : Vector2
+	Accelerate(acc: number,axis: number = AXIS.BOTH) : Vector2
 	{
 		let org_x = (axis & AXIS.X) ? undefined : this.x;
 		let org_y = (axis & AXIS.Y) ? undefined : this.y;
@@ -105,7 +105,7 @@ export class Vector2 {
 	* @param {number} decl - Removes the provided number from the vector's current magnitude, bottoms out at 0.
 	* @returns {Vector2} Returns this vector.
 	*/
-	Decelerate(decl,axis = AXIS.BOTH) : Vector2
+	Decelerate(decl: number,axis: number = AXIS.BOTH) : Vector2
 	{
 		if(this.x == 0 && this.y == 0) return this;
 		let org_x = (axis & AXIS.X) ? undefined : this.x;
@@ -128,7 +128,7 @@ export class Vector2 {
 	* @param {number} axis - Filter for which axis this operation is applied to
 	* @returns {number} A number representing the length of the vector
 	*/
-	Magnitude(axis = AXIS.BOTH) : number
+	Magnitude(axis: number = AXIS.BOTH) : number
 	{
 		return PointDistance(0,0,(axis & AXIS.X) ? this.x : 0,(axis & AXIS.Y) ? this.y : 0);
 	}
@@ -152,7 +152,7 @@ export class Vector2 {
 	* @param {Vector2} vector 
 	* @returns {Boolean} If the provided vector is equal to this vector.
 	*/
-	Equals(vector) : Boolean
+	Equals(vector: Vector2) : Boolean
 	{
 		return this.x === vector.x && this.y === vector.y;
 	}
