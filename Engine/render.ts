@@ -49,9 +49,9 @@ export function __RENDER() : number {
 			});
 			sub_array.forEach(enr => {
 				enr.LateDraw();
-				if(DRAW_COLLIDERS && enr.colliders != null && enr.colliders.length) 
+				if(DRAW_COLLIDERS && enr.GetColliders().length) 
 				{
-					enr.colliders.forEach(collid => {
+					enr.GetColliders().forEach(collid => {
 						collid.DrawCollider(enr);
 					});
 				}

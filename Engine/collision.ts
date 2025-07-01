@@ -22,11 +22,11 @@ export function __RESOLVE_COLLISIONS(caller:Entity,all_colliders:Array<Entity>)
 	if(caller == null) return;
 	if(all_colliders.length <= 1) return;
 	all_colliders.forEach(clu => {
-		if(clu != caller && !caller.__destroyed && !clu.__destroyed && caller.colliders != null && caller.colliders.length)
+		if(clu != caller && !caller.IsDestroyed() && !clu.IsDestroyed() && caller.GetColliders().length)
 		{
 			// Check all colliders on an entity against all other colliders that exist, except if they are on our own entity!
 			let data_list = [];
-			caller.colliders.forEach(each_collider => {
+			caller.GetColliders().forEach(each_collider => {
 				data_list = data_list.concat(each_collider.CheckCollider(caller,clu));
 			});
 			// For each collision that happened, resolve them one by one, so this loop is not required to be made by EVERY time.
@@ -34,8 +34,8 @@ export function __RESOLVE_COLLISIONS(caller:Entity,all_colliders:Array<Entity>)
 			{
 				data_list.forEach((col_data: CollisionData) => 
 				{	
-					if(col_data.entity.__destroyed) return; // Already destroyed by something, drop out. All future collisions are irrelevant.
-					if(!col_data.other_entity.__destroyed) caller.OnCollision(col_data); // Only allow non destroyed entities to affect collision.
+					if(col_data.entity.IsDestroyed()) return; // Already destroyed by something, drop out. All future collisions are irrelevant.
+					if(!col_data.other_entity.IsDestroyed()) caller.OnCollision(col_data); // Only allow non destroyed entities to affect collision.
 				});
 			}
 		}
@@ -114,7 +114,7 @@ export class ColliderPoint
 		let x: number = owner.position.x + this.offset.x;
 		let y: number = owner.position.y + this.offset.y;
 
-		other.colliders.forEach(other_collider => 
+		other.GetColliders().forEach(other_collider => 
 		{
 			let otherx = other.position.x + other_collider.offset.x;
 			let othery = other.position.y + other_collider.offset.y;

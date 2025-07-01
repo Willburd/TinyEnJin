@@ -148,7 +148,7 @@ export class Entity
 	* @param {CollisionData} collision_data - Data of the collision that happened.
 	* @returns {void}
 	*/
-	protected OnCollision(collision_data: CollisionData) {};
+	public OnCollision(collision_data: CollisionData) : void {};
 
 	
 	/**
