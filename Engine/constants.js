@@ -2,7 +2,7 @@ const ENTITY_CAP = 60; //2048; (Use lower to catch memory leaks)
 const RENDER_WARNING_LIMIT = 256; // Amount of sprites that can be drawn per frame before it starts giving warnings
 const ENTITY_LIST_REFRESH_THRESHOLD = 20 // Amount of nulls in the entity processing list that triggers a rebuild
 const DRAW_COLLIDERS = false;
-const DRAW_STATIC_COLLIDERS = false;
+const DRAW_STATIC_COLLIDERS = true;
 
 const GAMEMODE_BASIC = (1 << 0);
 const GAMEMODE_PAUSE = (1 << 1);

@@ -444,7 +444,7 @@ class StaticCollisionData
 	*/
 	GetCorrectionOffsets()
 	{
-		return new Vector2((this.last_free.x - this.start.x) - this.cast_length.x, (this.last_free.y - this.start.y) - this.cast_length.y);
+		return new Vector2((this.at.x - this.start.x) - this.cast_length.x, (this.at.y - this.start.y) - this.cast_length.y);
 	}
 }
 
