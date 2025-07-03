@@ -44,28 +44,28 @@ export class ColliderPoint {
 	 * @type {string}
 	 * @public
 	 */
-	collider_unique_id = "";
+	collider_unique_id:string = "";
 
 	/**
 	 * Type of collision logic used, uses the COLLIDERTYPE_ constants.
-	 * @type {COLLIDERTYPE}
+	 * @type {number}
 	 * @protected
 	 */
-	collider_type = COLLIDERTYPE_POINT;
+	collider_type:number = COLLIDERTYPE_POINT;
 
 	/**
 	 * Flag for if the collider will perform collisions, both giving and recieving.
 	 * @type {boolean}
 	 * @public
 	 */
-	active = true;
+	active:boolean = true;
 
 	/**
 	 * Offset from the entity's x and y position that this collider's origin is placed.
 	 * @type {Vector2}
 	 * @public
 	 */
-	offset = Vector2.Identity();
+	offset:Vector2 = Vector2.Identity();
 
 	/**
 	 * Width of the collider,
@@ -76,7 +76,7 @@ export class ColliderPoint {
 	 * @type {number}
 	 * @public
 	 */
-	width = 0;
+	width:number = 0;
 
 	/**
 	 * Height of the collider,
@@ -87,7 +87,7 @@ export class ColliderPoint {
 	 * @type {number}
 	 * @public
 	 */
-	height = 0;
+	height:number = 0;
 
 	constructor(id: string, xoff: number, yoff: number, wid: number, hig: number) {
 		this.collider_unique_id = id;
