@@ -21,6 +21,7 @@ window.addEventListener("load", () => {
  * @returns {number}
  */
 export function __INTERNAL_LOADING(): number {
+	dispatchEvent(new Event("__ASSET_SETUP"));
 	if (__IMGS_TOTAL > 0) console.log("Loading progress: " + __LOAD_PROGRESS());
 	if (__IMGS_ERR > 0) {
 		console.log("Errors: " + __IMGS_ERR);

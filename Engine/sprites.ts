@@ -2,6 +2,20 @@ import { ctx } from "./render";
 import { Game } from "./engine";
 
 export let sprite_data: Record<string, SpriteData> = {};
+export let all_images: Array<HTMLImageElement> = [];
+
+/**
+ * Creates image assets during the initial loading period.
+ * @returns {void}
+ */
+export function CREATE_IMAGE_ASSET(name:string, width:number, height:number, path:string): void {
+	const img = new Image();
+	img.src = path;
+	img.id = name;
+	img.width = width;
+	img.height = height;
+	all_images.push(img);
+}
 
 /**
  * Handles loading assets. If no assets have been flagged for loading, call setup functions to start loading.
@@ -34,7 +48,6 @@ export let __IMGS_ERR: number = 0;
  * @returns {void}
  */
 export function __INIT_SPRITE_LIBRARY(): void {
-	const all_images: HTMLCollectionOf<HTMLImageElement> = document.getElementsByTagName("img");
 	for (let index = 0; index < all_images.length; ++index) {
 		const element = all_images[index] as HTMLImageElement;
 		__INIT_SPRITE(element);
@@ -56,11 +69,13 @@ export function __INIT_SPRITE(img: HTMLImageElement): void {
 		img.onload = () => {
 			__LOAD_IMG_FINALIZE(img);
 		};
-		img.onerror = () => {
+		img.onerror = (ev:string|Event) => {
 			__IMGS_ERR++;
+			console.log("Error loading: " + img.id + " - " + img.src + " - " + ev.toString());
 		};
-		img.onabort = () => {
+		img.onabort = (ev:string|Event) => {
 			__IMGS_ERR++;
+			console.log("Aborted loading: " + img.id + " - " + img.src + " - " + ev.toString());
 		};
 	}
 }
@@ -71,6 +86,7 @@ export function __INIT_SPRITE(img: HTMLImageElement): void {
  * @returns {void}
  */
 function __LOAD_IMG_FINALIZE(img: HTMLImageElement): void {
+	console.log("Finished loading: " + img.id + " - " + img.src);
 	const nm = img.id;
 	const wid = img.width;
 	const hig = img.height;

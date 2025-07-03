@@ -1,4 +1,5 @@
 import { main_canvas } from "../Engine/render";
+import { CREATE_IMAGE_ASSET } from "../Engine/sprites";
 import { Game } from "../Engine/engine";
 
 // Required function that creates an instance of your game's class, and starts it up. Your game must define this itself.
@@ -21,3 +22,8 @@ class TemplateGame extends Game {
 
 	override Update() {}
 }
+
+// Load all assets the game needs
+window.addEventListener("__ASSET_SETUP", () => {
+	CREATE_IMAGE_ASSET("bg_fullblack",1024,1024,"SharedAssets/bg_fullblack.png");
+});
