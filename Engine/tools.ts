@@ -325,7 +325,7 @@ export function ViewHeight(): number {
  * @returns {void}
  */
 export function DrawEntity(ent: Entity) {
-	__DRAWSPRITE(ent.GetCanvas(), ent.sprite, ent.frame, ent.position.x, ent.position.y, ent.image_alpha, ent.image_xscale, ent.image_yscale, ent.sprite_align.x, ent.sprite_align.y, ent.image_angle);
+	__DRAWSPRITE(ent.GetCanvas(), ent.sprite, ent.frame, ent.position.x, ent.position.y, ent.image_alpha, ent.image_xscale, ent.image_yscale, ent.image_angle);
 }
 
 /**
@@ -344,7 +344,7 @@ export function DrawEntity(ent: Entity) {
  * @returns {void}
  */
 export function DrawSprite(draw_canvas: CanvasRenderingContext2D, spr: string, frame: number, x: number, y: number, alpha: number = 1, xscale: number = 1, yscale: number = 1, align_h: number = 0, align_v: number = 0, angle: number = 0) {
-	__DRAWSPRITE(draw_canvas, spr, frame, x, y, alpha, xscale, yscale, align_h, align_v, angle);
+	__DRAWSPRITE(draw_canvas, spr, frame, x, y, alpha, xscale, yscale, angle);
 }
 
 /**

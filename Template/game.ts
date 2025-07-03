@@ -25,5 +25,5 @@ class TemplateGame extends Game {
 
 // Load all assets the game needs
 window.addEventListener("__ASSET_SETUP", () => {
-	CREATE_IMAGE_ASSET("bg_fullblack",1024,1024,"SharedAssets/bg_fullblack.png");
+	CREATE_IMAGE_ASSET("bg_fullblack", 1024, 1024, 0, 0, "SharedAssets/bg_fullblack.png");
 });

@@ -1,20 +1,31 @@
 import { ctx } from "./render";
 import { Game } from "./engine";
+import { Vector2 } from "./vector";
 
 export let sprite_data: Record<string, SpriteData> = {};
-export let all_images: Array<HTMLImageElement> = [];
+export let all_images: Array<ImageMeta> = [];
+
+class ImageMeta {
+	img: HTMLImageElement;
+	offset: Vector2;
+
+	constructor(img: HTMLImageElement, offset: Vector2) {
+		this.img = img;
+		this.offset = offset;
+	}
+}
 
 /**
  * Creates image assets during the initial loading period.
  * @returns {void}
  */
-export function CREATE_IMAGE_ASSET(name:string, width:number, height:number, path:string): void {
+export function CREATE_IMAGE_ASSET(name: string, width: number, height: number, h_offset: number, v_offset: number, path: string): void {
 	const img = new Image();
 	img.src = path;
 	img.id = name;
 	img.width = width;
 	img.height = height;
-	all_images.push(img);
+	all_images.push(new ImageMeta(img, new Vector2(h_offset, v_offset)));
 }
 
 /**
@@ -49,7 +60,7 @@ export let __IMGS_ERR: number = 0;
  */
 export function __INIT_SPRITE_LIBRARY(): void {
 	for (let index = 0; index < all_images.length; ++index) {
-		const element = all_images[index] as HTMLImageElement;
+		const element = all_images[index] as ImageMeta;
 		__INIT_SPRITE(element);
 		__IMGS_TOTAL++;
 	}
@@ -60,22 +71,22 @@ export function __INIT_SPRITE_LIBRARY(): void {
  * @param {Element} img - Html img element
  * @returns {void}
  */
-export function __INIT_SPRITE(img: HTMLImageElement): void {
-	if (img.complete) {
+export function __INIT_SPRITE(meta: ImageMeta): void {
+	if (meta.img.complete) {
 		// Was ready before the script called it.
-		__LOAD_IMG_FINALIZE(img);
+		__LOAD_IMG_FINALIZE(meta);
 	} // Needs time to load still...
 	else {
-		img.onload = () => {
-			__LOAD_IMG_FINALIZE(img);
+		meta.img.onload = () => {
+			__LOAD_IMG_FINALIZE(meta);
 		};
-		img.onerror = (ev:string|Event) => {
+		meta.img.onerror = (ev: string | Event) => {
 			__IMGS_ERR++;
-			console.log("Error loading: " + img.id + " - " + img.src + " - " + ev.toString());
+			console.log("Error loading: " + meta.img.id + " - " + meta.img.src + " - " + ev.toString());
 		};
-		img.onabort = (ev:string|Event) => {
+		meta.img.onabort = (ev: string | Event) => {
 			__IMGS_ERR++;
-			console.log("Aborted loading: " + img.id + " - " + img.src + " - " + ev.toString());
+			console.log("Aborted loading: " + meta.img.id + " - " + meta.img.src + " - " + ev.toString());
 		};
 	}
 }
@@ -85,15 +96,17 @@ export function __INIT_SPRITE(img: HTMLImageElement): void {
  * @param {HTMLImageElement} img - Html img element
  * @returns {void}
  */
-function __LOAD_IMG_FINALIZE(img: HTMLImageElement): void {
-	console.log("Finished loading: " + img.id + " - " + img.src);
-	const nm = img.id;
-	const wid = img.width;
-	const hig = img.height;
-	sprite_data[nm] = new SpriteData(img, wid, hig, Math.ceil(img.naturalWidth / wid));
+function __LOAD_IMG_FINALIZE(meta: ImageMeta): void {
+	console.log("Finished loading: " + meta.img.id + " - " + meta.img.src);
+	const nm = meta.img.id;
+	const wid = meta.img.width;
+	const hig = meta.img.height;
+	const xoff = meta.offset.x;
+	const yoff = meta.offset.y;
+	sprite_data[nm] = new SpriteData(meta.img, wid, hig, xoff, yoff, Math.ceil(meta.img.naturalWidth / wid));
 	console.log("Made image " + nm + " : " + sprite_data[nm].width + ", " + sprite_data[nm].height);
-	img.style.height = "0px";
-	img.style.width = "0px";
+	meta.img.style.height = "0px";
+	meta.img.style.width = "0px";
 	__IMGS_LOADED++;
 }
 
@@ -101,12 +114,16 @@ export class SpriteData {
 	image: HTMLImageElement;
 	width: number = 0;
 	height: number = 0;
+	h_offset: number = 0;
+	v_offset: number = 0;
 	anim_length: number = 0;
 
-	constructor(img: HTMLImageElement, wid: number, hig: number, anm_len: number) {
+	constructor(img: HTMLImageElement, wid: number, hig: number, h_offset: number, v_offset: number, anm_len: number) {
 		this.image = img;
 		this.width = wid;
 		this.height = hig;
+		this.h_offset = h_offset;
+		this.v_offset = v_offset;
 		this.anim_length = anm_len;
 	}
 }
@@ -126,7 +143,7 @@ export class SpriteData {
  * @param {number} angle - The angle the sprite is drawn at. (CURRENTLY WIP)
  * @returns {void}
  */
-export function __DRAWSPRITE(context: CanvasRenderingContext2D, spr: string, frame: number, x: number, y: number, alpha: number = 1, xscale: number = 1, yscale: number = 1, align_h: number = 0, align_v: number = 0, angle: number = 0) {
+export function __DRAWSPRITE(context: CanvasRenderingContext2D, spr: string, frame: number, x: number, y: number, alpha: number = 1, xscale: number = 1, yscale: number = 1, angle: number = 0) {
 	if (context == undefined || spr == "" || xscale == 0 || yscale == 0) return; // No.
 	let data = sprite_data[spr];
 	if (data == undefined) {
@@ -171,8 +188,8 @@ export function __DRAWSPRITE(context: CanvasRenderingContext2D, spr: string, fra
 		0, // sy
 		wid, // swidth
 		hig, // sheight
-		Math.floor(vx * Math.sign(xscale) + align_h * xscale + xscale_off), // dx
-		Math.floor(vy * Math.sign(yscale) + align_v * yscale + yscale_off), // dy
+		Math.floor(vx * Math.sign(xscale) + data.h_offset * xscale + xscale_off), // dx
+		Math.floor(vy * Math.sign(yscale) + data.v_offset * yscale + yscale_off), // dy
 		wid * Math.abs(xscale), // dwidth
 		hig * Math.abs(yscale),
 	); // dheight

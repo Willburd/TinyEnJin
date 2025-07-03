@@ -40,7 +40,6 @@ export class Entity {
 	public visible: boolean = true;
 	public image_xscale: number = 1;
 	public image_yscale: number = 1;
-	public sprite_align: Vector2 = Vector2.Identity(); // Center offset of sprite
 	public image_angle: number = 0; // rotation in degrees to Draw at
 	public image_alpha: number = 1; // Transparency, with 1 being fully opaque
 
