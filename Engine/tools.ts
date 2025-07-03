@@ -318,8 +318,8 @@ export function AngleTo(x: number, y: number, ent: Entity): number {
  * @returns {Vector2}
  */
 export function MoveToward(angle: number, distance: number): Vector2 {
-  if (angle < 0) return new Vector2(0, 0);
-  if (distance == 0) return new Vector2(0, 0);
+  if (angle < 0) return Vector2.Identity();
+  if (distance == 0) return Vector2.Identity();
   let dir = angle / (180 / Math.PI);
   return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
 }

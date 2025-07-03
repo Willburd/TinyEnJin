@@ -221,7 +221,11 @@ export class Game {
 
     // Self Update
     this.Update();
-    if (Game.active_scene) Game.active_scene.Update();
+    if (Game.active_scene) 
+	{
+		Game.active_scene.Update();
+		Game.active_scene.view_position.Add(Game.active_scene.scroll_speed);
+	}
 
     // Update objects
     let all_colliding_entities: Array<Entity> = [];

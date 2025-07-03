@@ -88,7 +88,7 @@ export class ColliderPoint {
    * @type {Vector2}
    * @public
    */
-  offset = new Vector2(0, 0);
+  offset = Vector2.Identity();
 
   /**
    * Width of the collider,
@@ -503,7 +503,7 @@ export class CollisionData {
    * @type {Vector2}
    * @public
    */
-  hit: Vector2 = new Vector2(0, 0);
+  hit: Vector2 = Vector2.Identity();
 
   constructor(
     unique_id: string,
@@ -535,28 +535,28 @@ export class StaticCollisionData {
    * @type {Vector2}
    * @public
    */
-  start: Vector2 = new Vector2(0, 0);
+  start: Vector2 = Vector2.Identity();
 
   /**
    * Position of the collision. Usually just the check's x and y, but raycasts will give the exact x and y.
    * @type {Vector2}
    * @public
    */
-  hit: Vector2 = new Vector2(0, 0);
+  hit: Vector2 = Vector2.Identity();
 
   /**
    * Position of the last position without a collision. Usually just the check's x and y, but raycasts will give the exact x and y.
    * @type {Vector2}
    * @public
    */
-  last_free: Vector2 = new Vector2(0, 0);
+  last_free: Vector2 = Vector2.Identity();
 
   /**
    * The distance of each raycast.
    * @type {Vector2}
    * @public
    */
-  cast_length: Vector2 = new Vector2(0, 0);
+  cast_length: Vector2 = Vector2.Identity();
 
   constructor(
     collision_value: any,

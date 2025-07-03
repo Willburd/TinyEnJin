@@ -26,9 +26,9 @@ export class Entity {
 
   // Core
   public ent_name: string = "";
-  public position: Vector2 = new Vector2(0, 0);
-  public start_position: Vector2 = new Vector2(0, 0);
-  public prev_position: Vector2 = new Vector2(0, 0);
+  public position: Vector2 = Vector2.Identity();
+  public start_position: Vector2 = Vector2.Identity();
+  public prev_position: Vector2 = Vector2.Identity();
   public depth: number = DEPTH_DEFAULT; // Draw depth, higher numbers Draw closer to the screen
 
   // Drawing
@@ -40,7 +40,7 @@ export class Entity {
   public visible: boolean = true;
   public image_xscale: number = 1;
   public image_yscale: number = 1;
-  public sprite_align: Vector2 = new Vector2(0, 0); // Center offset of sprite
+  public sprite_align: Vector2 = Vector2.Identity(); // Center offset of sprite
   public image_angle: number = 0; // rotation in degrees to Draw at
   public image_alpha: number = 1; // Transparency, with 1 being fully opaque
 
@@ -193,7 +193,7 @@ export class Entity {
 }
 
 export class GameObj extends Entity {
-  SPEED: Vector2 = new Vector2(0, 0); // Automatic x/y movement, does not handle collision(yet?)
+  SPEED: Vector2 = Vector2.Identity(); // Automatic x/y movement, does not handle collision(yet?)
   VIEW_EDGE_LIMIT: number = -1; // If above 0, will be destroyed if it goes outside of the view + this as padding
 
   override __INTERNAL_UPDATE() {

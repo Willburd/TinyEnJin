@@ -5,6 +5,11 @@ export class Vector2 {
   x: number = 0;
   y: number = 0;
 
+  /**
+   * @returns {Vector2} Returns a new vector with both an x and y of 0;
+   */
+  public static Identity():Vector2 {return new Vector2(0,0);};
+
   constructor(xx: number, yy: number) {
     this.x = xx;
     this.y = yy;
@@ -106,7 +111,7 @@ export class Vector2 {
     if (dist < 0) dist = 0;
 
     let head = this.Heading();
-    let new_vec = new Vector2(0, 0);
+    let new_vec = Vector2.Identity();
     if (head >= 0) new_vec = MoveToward(head, dist);
     this.Zero(AXIS.BOTH).Add(new_vec, axis);
 

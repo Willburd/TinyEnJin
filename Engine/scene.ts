@@ -22,10 +22,11 @@ export function START_SCENE(new_scene: Scene | null): void {
 
 export class Scene {
     // View scrolling
-    view_position: Vector2 = new Vector2(0, 0);
+    view_position: Vector2 = Vector2.Identity();
 
     static_collision_map: Array<any> = []; // Collision 2d array for static collisions
     static_col_resolution: number = 16; // Pixels per collision index
+    scroll_speed:Vector2 = Vector2.Identity();
 
     /**
     * Custom Init code. Can be safely overridden.
