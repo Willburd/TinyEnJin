@@ -10,18 +10,18 @@ export let entities_destroyed = 0;
  * @returns {void}
  */
 export function DESTROY_ALL(unloading: boolean, forced: boolean): void {
-  let new_list: Array<Entity> = [];
-  Game.active_game.GetEntityList().forEach((element) => {
-    if (element != null && !element.IsDestroyed()) {
-      if (!element.PERSISTANT || forced) {
-        element.DESTROY(unloading);
-      } else {
-        // Re-add to list, apply new ID
-        element.AssignSlot(new_list.length);
-        new_list.push(element);
-      }
-    }
-  });
-  // Wipe prior list state
-  Game.active_game.REFRESH_ENTITY_LIST(new_list);
+	let new_list: Array<Entity> = [];
+	Game.active_game.GetEntityList().forEach((element) => {
+		if (element != null && !element.IsDestroyed()) {
+			if (!element.PERSISTANT || forced) {
+				element.DESTROY(unloading);
+			} else {
+				// Re-add to list, apply new ID
+				element.AssignSlot(new_list.length);
+				new_list.push(element);
+			}
+		}
+	});
+	// Wipe prior list state
+	Game.active_game.REFRESH_ENTITY_LIST(new_list);
 }

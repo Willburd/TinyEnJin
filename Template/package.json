@@ -1,14 +1,14 @@
 {
-  "name": "tinyenjin-template",
-  "version": "0.0.01",
-  "description": "A tiny typescript engine.",
-  "private": true,
-  "scripts": {},
-  "keywords": [],
-  "author": "Willbird",
-  "license": "MIT",
-  "devDependencies": {
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2"
-  }
+	"name": "tinyenjin-template",
+	"version": "0.0.01",
+	"description": "A tiny typescript engine.",
+	"private": true,
+	"scripts": {},
+	"keywords": [],
+	"author": "Willbird",
+	"license": "MIT",
+	"devDependencies": {
+		"webpack": "^5.38.1",
+		"webpack-cli": "^4.7.2"
+	}
 }

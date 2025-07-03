@@ -19,20 +19,13 @@ import { Entity } from "./entity";
  * @param {number} bry - bottom right y boundary.
  * @returns {Vector2}
  */
-export function ConstrainPoint(
-  x: number,
-  y: number,
-  tlx: number,
-  tly: number,
-  brx: number,
-  bry: number,
-): Vector2 {
-  let pr = new Vector2(x, y);
-  if (x < tlx) pr.x = tlx;
-  if (x > brx) pr.x = brx;
-  if (y < tly) pr.y = tly;
-  if (y > bry) pr.y = bry;
-  return pr;
+export function ConstrainPoint(x: number, y: number, tlx: number, tly: number, brx: number, bry: number): Vector2 {
+	let pr = new Vector2(x, y);
+	if (x < tlx) pr.x = tlx;
+	if (x > brx) pr.x = brx;
+	if (y < tly) pr.y = tly;
+	if (y > bry) pr.y = bry;
+	return pr;
 }
 
 /**
@@ -44,14 +37,8 @@ export function ConstrainPoint(
  * @param {number} bry - bottom right y boundary.
  * @returns {Vector2}
  */
-export function ConstrainEntity(
-  ent: Entity,
-  tlx: number,
-  tly: number,
-  brx: number,
-  bry: number,
-): Vector2 {
-  return ConstrainPoint(ent.position.x, ent.position.y, tlx, tly, brx, bry);
+export function ConstrainEntity(ent: Entity, tlx: number, tly: number, brx: number, bry: number): Vector2 {
+	return ConstrainPoint(ent.position.x, ent.position.y, tlx, tly, brx, bry);
 }
 
 /**
@@ -62,13 +49,8 @@ export function ConstrainEntity(
  * @param {number} y2 - Second point's y position.
  * @returns {number} Distance between the points.
  */
-export function PointDistance(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-): number {
-  return Math.abs(Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)); // Pythag!
+export function PointDistance(x1: number, y1: number, x2: number, y2: number): number {
+	return Math.abs(Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)); // Pythag!
 }
 
 /**
@@ -79,7 +61,7 @@ export function PointDistance(
  * @returns {number}
  */
 export function Lerp(start: number, end: number, percent: number): number {
-  return start * (1 - percent) + end * percent;
+	return start * (1 - percent) + end * percent;
 }
 
 /**
@@ -89,7 +71,7 @@ export function Lerp(start: number, end: number, percent: number): number {
  * @returns {number}
  */
 export function RoundToIncriment(val: number, round: number): number {
-  return Math.round(val / round) * round;
+	return Math.round(val / round) * round;
 }
 
 /**
@@ -99,7 +81,7 @@ export function RoundToIncriment(val: number, round: number): number {
  * @returns {number}
  */
 export function FloorToIncriment(val: number, round: number): number {
-  return Math.floor(val / round) * round;
+	return Math.floor(val / round) * round;
 }
 
 /**
@@ -109,7 +91,7 @@ export function FloorToIncriment(val: number, round: number): number {
  * @returns {number}
  */
 export function CeilToIncriment(val: number, round: number): number {
-  return Math.ceil(val / round) * round;
+	return Math.ceil(val / round) * round;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,16 +108,9 @@ export function CeilToIncriment(val: number, round: number): number {
  * @param {number} bry - rectangle's bottom right y boundary.
  * @returns {boolean} If the point is within the rectangle.
  */
-export function PointInsideRectangle(
-  x: number,
-  y: number,
-  tlx: number,
-  tly: number,
-  brx: number,
-  bry: number,
-): boolean {
-  if (x <= tlx || x >= brx || y <= tly || y >= bry) return false;
-  return true;
+export function PointInsideRectangle(x: number, y: number, tlx: number, tly: number, brx: number, bry: number): boolean {
+	if (x <= tlx || x >= brx || y <= tly || y >= bry) return false;
+	return true;
 }
 
 /**
@@ -150,25 +125,15 @@ export function PointInsideRectangle(
  * @param {number} bry2 - other rectangle's bottom right y boundary.
  * @returns {boolean} If the rectangles overlap.
  */
-export function rectangle_inside_rectangle(
-  tlx: number,
-  tly: number,
-  brx: number,
-  bry: number,
-  tlx2: number,
-  tly2: number,
-  brx2: number,
-  bry2: number,
-): boolean {
-  let center_x = tlx + (brx - tlx) * 0.5;
-  let center_y = tly + (bry - tly) * 0.5;
-  if (PointInsideRectangle(center_x, center_y, tlx2, tly2, brx2, bry2))
-    return true; // Center
-  if (PointInsideRectangle(tlx, tly, tlx2, tly2, brx2, bry2)) return true; // TL
-  if (PointInsideRectangle(brx, tly, tlx2, tly2, brx2, bry2)) return true; // TR
-  if (PointInsideRectangle(tlx, bry, tlx2, tly2, brx2, bry2)) return true; // BL
-  if (PointInsideRectangle(brx, bry, tlx2, tly2, brx2, bry2)) return true; // BR
-  return false;
+export function rectangle_inside_rectangle(tlx: number, tly: number, brx: number, bry: number, tlx2: number, tly2: number, brx2: number, bry2: number): boolean {
+	let center_x = tlx + (brx - tlx) * 0.5;
+	let center_y = tly + (bry - tly) * 0.5;
+	if (PointInsideRectangle(center_x, center_y, tlx2, tly2, brx2, bry2)) return true; // Center
+	if (PointInsideRectangle(tlx, tly, tlx2, tly2, brx2, bry2)) return true; // TL
+	if (PointInsideRectangle(brx, tly, tlx2, tly2, brx2, bry2)) return true; // TR
+	if (PointInsideRectangle(tlx, bry, tlx2, tly2, brx2, bry2)) return true; // BL
+	if (PointInsideRectangle(brx, bry, tlx2, tly2, brx2, bry2)) return true; // BR
+	return false;
 }
 
 /**
@@ -182,21 +147,13 @@ export function rectangle_inside_rectangle(
  * @param {number} rad - the radius of the circle
  * @returns {boolean} If the rectangle and circle overlap.
  */
-export function rectangle_inside_circle(
-  tlx: number,
-  tly: number,
-  brx: number,
-  bry: number,
-  cx: number,
-  cy: number,
-  rad: number,
-): boolean {
-  if (PointInsideRectangle(cx, cy, tlx, tly, brx, bry)) return true; // Center
-  if (PointInsideCircle(tlx, tly, cx, cy, rad)) return true; // TL
-  if (PointInsideCircle(brx, tly, cx, cy, rad)) return true; // TR
-  if (PointInsideCircle(tlx, bry, cx, cy, rad)) return true; // BL
-  if (PointInsideCircle(brx, bry, cx, cy, rad)) return true; // BR
-  return false;
+export function rectangle_inside_circle(tlx: number, tly: number, brx: number, bry: number, cx: number, cy: number, rad: number): boolean {
+	if (PointInsideRectangle(cx, cy, tlx, tly, brx, bry)) return true; // Center
+	if (PointInsideCircle(tlx, tly, cx, cy, rad)) return true; // TL
+	if (PointInsideCircle(brx, tly, cx, cy, rad)) return true; // TR
+	if (PointInsideCircle(tlx, bry, cx, cy, rad)) return true; // BL
+	if (PointInsideCircle(brx, bry, cx, cy, rad)) return true; // BR
+	return false;
 }
 
 /**
@@ -208,14 +165,8 @@ export function rectangle_inside_circle(
  * @param {number} rad - the radius of the circle
  * @returns {boolean} If the point overlaps the circle
  */
-export function PointInsideCircle(
-  x: number,
-  y: number,
-  cx: number,
-  cy: number,
-  rad: number,
-): boolean {
-  return PointDistance(x, y, cx, cy) <= rad;
+export function PointInsideCircle(x: number, y: number, cx: number, cy: number, rad: number): boolean {
+	return PointDistance(x, y, cx, cy) <= rad;
 }
 
 /**
@@ -228,15 +179,8 @@ export function PointInsideCircle(
  * @param {number} rad2 - the radius of the other circle
  * @returns {boolean} If the circles overlap
  */
-export function circle_inside_circle(
-  cx: number,
-  cy: number,
-  rad: number,
-  cx2: number,
-  cy2: number,
-  rad2: number,
-): boolean {
-  return PointInsideCircle(cx, cy, cx2, cy2, rad + rad2);
+export function circle_inside_circle(cx: number, cy: number, rad: number, cx2: number, cy2: number, rad2: number): boolean {
+	return PointInsideCircle(cx, cy, cx2, cy2, rad + rad2);
 }
 
 /**
@@ -247,14 +191,7 @@ export function circle_inside_circle(
  * @returns {boolean} If the point is within the view or the padding specified.
  */
 export function PointInsideView(x: number, y: number, pad: number): boolean {
-  return PointInsideRectangle(
-    x,
-    y,
-    Game.active_scene.view_position.x - pad,
-    Game.active_scene.view_position.y - pad,
-    Game.active_scene.view_position.x + ViewWidth() + pad,
-    Game.active_scene.view_position.y + ViewHeight() + pad,
-  );
+	return PointInsideRectangle(x, y, Game.active_scene.view_position.x - pad, Game.active_scene.view_position.y - pad, Game.active_scene.view_position.x + ViewWidth() + pad, Game.active_scene.view_position.y + ViewHeight() + pad);
 }
 
 /**
@@ -265,7 +202,7 @@ export function PointInsideView(x: number, y: number, pad: number): boolean {
  * @returns {boolean} If the point is outside the view and the padding specified.
  */
 export function PointOutsideView(x: number, y: number, pad: number): boolean {
-  return !PointInsideView(x, y, pad);
+	return !PointInsideView(x, y, pad);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,13 +217,8 @@ export function PointOutsideView(x: number, y: number, pad: number): boolean {
  * @param {number} y2 - Second point's y position.
  * @returns {number} Angle from the first point to the second in degrees.
  */
-export function FindAngle(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-): number {
-  return (360 + (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI) % 360; // ALWAYS positive!
+export function FindAngle(x1: number, y1: number, x2: number, y2: number): number {
+	return (360 + (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI) % 360; // ALWAYS positive!
 }
 
 /**
@@ -296,7 +228,7 @@ export function FindAngle(
  * @returns {number} Angle from the first point to the second in degrees.
  */
 export function FindVectorAngle(vec1: Vector2, vec2: Vector2): number {
-  return FindAngle(vec1.x, vec1.y, vec2.x, vec2.y);
+	return FindAngle(vec1.x, vec1.y, vec2.x, vec2.y);
 }
 
 /**
@@ -307,8 +239,8 @@ export function FindVectorAngle(vec1: Vector2, vec2: Vector2): number {
  * @returns {number} Angle from the first point to the entity's position. If it is unable to find an angle it will return -1
  */
 export function AngleTo(x: number, y: number, ent: Entity): number {
-  if (!ent) return -1;
-  return FindAngle(x, y, ent.position.x, ent.position.y);
+	if (!ent) return -1;
+	return FindAngle(x, y, ent.position.x, ent.position.y);
 }
 
 /**
@@ -318,10 +250,10 @@ export function AngleTo(x: number, y: number, ent: Entity): number {
  * @returns {Vector2}
  */
 export function MoveToward(angle: number, distance: number): Vector2 {
-  if (angle < 0) return Vector2.Identity();
-  if (distance == 0) return Vector2.Identity();
-  let dir = angle / (180 / Math.PI);
-  return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
+	if (angle < 0) return Vector2.Identity();
+	if (distance == 0) return Vector2.Identity();
+	let dir = angle / (180 / Math.PI);
+	return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
 }
 
 /**
@@ -330,7 +262,7 @@ export function MoveToward(angle: number, distance: number): Vector2 {
  * @returns {Vector2}
  */
 export function VectorFromAngle(angle: number): Vector2 {
-  return MoveToward(angle, 1);
+	return MoveToward(angle, 1);
 }
 
 /**
@@ -340,7 +272,7 @@ export function VectorFromAngle(angle: number): Vector2 {
  * @returns {number} The source angle rounded to the nearest incriment of the snap angle provided.
  */
 export function AngleSnap(angle: number, snap: number): number {
-  return Math.round(angle / snap) * snap;
+	return Math.round(angle / snap) * snap;
 }
 
 /**
@@ -350,8 +282,8 @@ export function AngleSnap(angle: number, snap: number): number {
  * @returns {number} The current index from 0 to max_index that the angle would be if converted from degrees to segments.
  */
 export function AngleToIndex(angle: number, max_index: number): number {
-  let angle_per_index = 360 / max_index;
-  return Math.round(angle / angle_per_index);
+	let angle_per_index = 360 / max_index;
+	return Math.round(angle / angle_per_index);
 }
 
 /**
@@ -362,15 +294,10 @@ export function AngleToIndex(angle: number, max_index: number): number {
  * @param {string} rightkey Right keyboard key.
  * @returns {Vector2} A non-normalized vector representing the current inputs of up down left and right.
  */
-export function GetInputVector(
-  upkey: string,
-  downkey: string,
-  leftkey: string,
-  rightkey: string,
-): Vector2 {
-  let UD = (isKeyHeld(downkey) ? 1 : 0) - (isKeyHeld(upkey) ? 1 : 0);
-  let LR = (isKeyHeld(rightkey) ? 1 : 0) - (isKeyHeld(leftkey) ? 1 : 0);
-  return new Vector2(LR, UD);
+export function GetInputVector(upkey: string, downkey: string, leftkey: string, rightkey: string): Vector2 {
+	let UD = (isKeyHeld(downkey) ? 1 : 0) - (isKeyHeld(upkey) ? 1 : 0);
+	let LR = (isKeyHeld(rightkey) ? 1 : 0) - (isKeyHeld(leftkey) ? 1 : 0);
+	return new Vector2(LR, UD);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,14 +309,14 @@ export function GetInputVector(
  * @returns {number}
  */
 export function ViewWidth(): number {
-  return main_canvas.width;
+	return main_canvas.width;
 }
 /**
  * Get the height of the game's viewport
  * @returns {number}
  */
 export function ViewHeight(): number {
-  return main_canvas.height;
+	return main_canvas.height;
 }
 
 /**
@@ -398,19 +325,7 @@ export function ViewHeight(): number {
  * @returns {void}
  */
 export function DrawEntity(ent: Entity) {
-  __DRAWSPRITE(
-    ent.GetCanvas(),
-    ent.sprite,
-    ent.frame,
-    ent.position.x,
-    ent.position.y,
-    ent.image_alpha,
-    ent.image_xscale,
-    ent.image_yscale,
-    ent.sprite_align.x,
-    ent.sprite_align.y,
-    ent.image_angle,
-  );
+	__DRAWSPRITE(ent.GetCanvas(), ent.sprite, ent.frame, ent.position.x, ent.position.y, ent.image_alpha, ent.image_xscale, ent.image_yscale, ent.sprite_align.x, ent.sprite_align.y, ent.image_angle);
 }
 
 /**
@@ -428,32 +343,8 @@ export function DrawEntity(ent: Entity) {
  * @param {number} angle - The angle the sprite is drawn at. (CURRENTLY WIP)
  * @returns {void}
  */
-export function DrawSprite(
-  draw_canvas: CanvasRenderingContext2D,
-  spr: string,
-  frame: number,
-  x: number,
-  y: number,
-  alpha: number = 1,
-  xscale: number = 1,
-  yscale: number = 1,
-  align_h: number = 0,
-  align_v: number = 0,
-  angle: number = 0,
-) {
-  __DRAWSPRITE(
-    draw_canvas,
-    spr,
-    frame,
-    x,
-    y,
-    alpha,
-    xscale,
-    yscale,
-    align_h,
-    align_v,
-    angle,
-  );
+export function DrawSprite(draw_canvas: CanvasRenderingContext2D, spr: string, frame: number, x: number, y: number, alpha: number = 1, xscale: number = 1, yscale: number = 1, align_h: number = 0, align_v: number = 0, angle: number = 0) {
+	__DRAWSPRITE(draw_canvas, spr, frame, x, y, alpha, xscale, yscale, align_h, align_v, angle);
 }
 
 /**
@@ -462,9 +353,9 @@ export function DrawSprite(
  * @returns {number} The length of the sprite's animation in frames.
  */
 export function AnimationLength(spr: string): number {
-  if (spr == "") return 0;
-  let data = sprite_data[spr] as SpriteData;
-  return data.anim_length;
+	if (spr == "") return 0;
+	let data = sprite_data[spr] as SpriteData;
+	return data.anim_length;
 }
 
 /**
@@ -472,11 +363,8 @@ export function AnimationLength(spr: string): number {
  * @param {BLENDMODE} new_mode - BLENDMODE constant that will be the new blending mode.
  * @returns {void}
  */
-export function SetBlendMode(
-  context: CanvasRenderingContext2D,
-  new_mode: GlobalCompositeOperation = BLENDMODE.SOURCEOVER,
-): void {
-  context.globalCompositeOperation = new_mode;
+export function SetBlendMode(context: CanvasRenderingContext2D, new_mode: GlobalCompositeOperation = BLENDMODE.SOURCEOVER): void {
+	context.globalCompositeOperation = new_mode;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,7 +378,7 @@ export function SetBlendMode(
  * @returns {number}
  */
 export function Rand(start: number, end: number): number {
-  return Lerp(start, end, Math.random());
+	return Lerp(start, end, Math.random());
 }
 
 /**
@@ -498,7 +386,7 @@ export function Rand(start: number, end: number): number {
  * @returns {number}
  */
 export function RandomAngle(): number {
-  return Rand(0, 360);
+	return Rand(0, 360);
 }
 
 /**
@@ -507,5 +395,5 @@ export function RandomAngle(): number {
  * @returns {boolean}
  */
 export function Prob(percent: number): boolean {
-  return Math.random() * 100 < percent;
+	return Math.random() * 100 < percent;
 }
