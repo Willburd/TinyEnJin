@@ -307,7 +307,7 @@ export function FindVectorAngle(vec1: Vector2, vec2: Vector2): number {
  * @returns {number} Angle from the first point to the entity's position. If it is unable to find an angle it will return -1
  */
 export function AngleTo(x: number, y: number, ent: Entity): number {
-  if (ent == null) return -1;
+  if (!ent) return -1;
   return FindAngle(x, y, ent.position.x, ent.position.y);
 }
 

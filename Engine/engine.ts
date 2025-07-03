@@ -131,8 +131,7 @@ export class Game {
    */
   static GET_ENTITY(identity_string: string): Entity | null {
     if (
-      identity_string == undefined ||
-      identity_string == null ||
+      !identity_string ||
       Game.active_game.id_to_entity[identity_string] == undefined
     )
       return null;

@@ -14,7 +14,7 @@ export function START_SCENE(new_scene: Scene | null): void {
         DESTROY_ALL(true, false);
         if (new_scene != null) new_scene.OnTransfer(old_scene, datapack);
     }
-    if (new_scene == null) new_scene = new Scene();
+    if (!new_scene) new_scene = new Scene();
     Game.active_scene = new_scene;
     if (Game.active_scene) Game.active_scene.OnInit();
     __FRAME(0, true);

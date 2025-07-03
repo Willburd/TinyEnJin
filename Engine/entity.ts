@@ -12,7 +12,7 @@ import * as TL from "../Engine/tools";
  * @returns {string} Entity's unique string id.
  */
 export function GET_UNIQUE_ID(ent: Entity): string {
-  if (ent == undefined || ent == null || ent.IsDestroyed()) return "";
+  if (!ent || ent.IsDestroyed()) return "";
   return ent.GetIdentifier();
 }
 
@@ -62,7 +62,7 @@ export class Entity {
   // Collision
   protected colliders: ColliderPoint[] | null = null;
   public GetColliders(): ColliderPoint[] {
-    return this.colliders == null ? [] : this.colliders;
+    return !this.colliders ? [] : this.colliders;
   }
 
   // Destruction

@@ -35,7 +35,7 @@ export function __RESOLVE_COLLISIONS(
   all_colliders: Array<Entity>,
 ) {
   // Dynamic collisions. Static collisions are handled in Update() manually.
-  if (caller == null) return;
+  if (!caller) return;
   if (all_colliders.length <= 1) return;
   all_colliders.forEach((clu) => {
     if (
@@ -625,7 +625,7 @@ export function GetStaticCollision(x: number, y: number): StaticCollisionData {
   if (y < 0) y = 0;
   static_col_checks.push([x, y]);
   if (
-    Game.active_scene == null ||
+    !Game.active_scene ||
     Game.active_scene.static_collision_map.length <= 0
   )
     return new StaticCollisionData(0, x, y, x, y, x, y);
@@ -638,7 +638,7 @@ export function GetStaticCollision(x: number, y: number): StaticCollisionData {
     Game.active_scene.static_collision_map[
       Math.floor(y / Game.active_scene.static_col_resolution)
     ];
-  if (submap == null || submap.length <= 0)
+  if (!submap || submap.length <= 0)
     return new StaticCollisionData(0, x, y, x, y, x, y);
   if (Math.floor(x / Game.active_scene.static_col_resolution) >= submap.length)
     return new StaticCollisionData(0, x, y, x, y, x, y);
