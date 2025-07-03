@@ -16,7 +16,7 @@ import { Game } from "./engine";
  * @param {Array<Entity>} all_colliders
  * @returns {void}
  */
-export function __RESOLVE_COLLISIONS(caller: Entity, all_colliders: Array<Entity>) {
+export function __RESOLVE_COLLISIONS(caller: Entity, all_colliders: Array<Entity>): void {
 	// Dynamic collisions. Static collisions are handled in Update() manually.
 	if (!caller) return;
 	if (all_colliders.length <= 1) return;
@@ -44,28 +44,28 @@ export class ColliderPoint {
 	 * @type {string}
 	 * @public
 	 */
-	collider_unique_id:string = "";
+	collider_unique_id: string = "";
 
 	/**
 	 * Type of collision logic used, uses the COLLIDERTYPE_ constants.
 	 * @type {number}
 	 * @protected
 	 */
-	collider_type:number = COLLIDERTYPE_POINT;
+	collider_type: number = COLLIDERTYPE_POINT;
 
 	/**
 	 * Flag for if the collider will perform collisions, both giving and recieving.
 	 * @type {boolean}
 	 * @public
 	 */
-	active:boolean = true;
+	active: boolean = true;
 
 	/**
 	 * Offset from the entity's x and y position that this collider's origin is placed.
 	 * @type {Vector2}
 	 * @public
 	 */
-	offset:Vector2 = Vector2.Identity();
+	offset: Vector2 = Vector2.Identity();
 
 	/**
 	 * Width of the collider,
@@ -76,7 +76,7 @@ export class ColliderPoint {
 	 * @type {number}
 	 * @public
 	 */
-	width:number = 0;
+	width: number = 0;
 
 	/**
 	 * Height of the collider,
@@ -87,7 +87,7 @@ export class ColliderPoint {
 	 * @type {number}
 	 * @public
 	 */
-	height:number = 0;
+	height: number = 0;
 
 	constructor(id: string, xoff: number, yoff: number, wid: number, hig: number) {
 		this.collider_unique_id = id;
@@ -103,14 +103,14 @@ export class ColliderPoint {
 	 * @returns {Array<CollisionData>}
 	 */
 	CheckCollider(owner: Entity, other: Entity): Array<CollisionData> {
-		let return_data: CollisionData[] = [];
-		let x: number = owner.position.x + this.offset.x;
-		let y: number = owner.position.y + this.offset.y;
+		const return_data: CollisionData[] = [];
+		const x: number = owner.position.x + this.offset.x;
+		const y: number = owner.position.y + this.offset.y;
 
 		other.GetColliders().forEach((other_collider) => {
-			let otherx = other.position.x + other_collider.offset.x;
-			let othery = other.position.y + other_collider.offset.y;
-			let other_data = new CollisionData(this.collider_unique_id, other_collider.collider_unique_id, owner, other, x, y);
+			const otherx = other.position.x + other_collider.offset.x;
+			const othery = other.position.y + other_collider.offset.y;
+			const other_data = new CollisionData(this.collider_unique_id, other_collider.collider_unique_id, owner, other, x, y);
 
 			switch (this.collider_type) {
 				case COLLIDERTYPE_POINT:
@@ -176,9 +176,9 @@ export class ColliderPoint {
 
 					if (this.height > 0) {
 						// Check either the length of the raycast, or the number of RAYCAST_ITERATIONS along it if it is longer than RAYCAST_ITERATIONS!
-						let angle = this.width;
-						let check_distance = GetRayCastIterationDistance(this.height);
-						let check = new Vector2(x, y);
+						const angle = this.width;
+						const check_distance = GetRayCastIterationDistance(this.height);
+						const check = new Vector2(x, y);
 						do {
 							check.AddHeading(angle, check_distance);
 							switch (other_collider.collider_type) {
@@ -226,8 +226,8 @@ export class ColliderPoint {
 	 * @returns {void}
 	 */
 	DrawCollider(owner: Entity): void {
-		let x = owner.position.x + this.offset.x - Game.active_scene.view_position.x;
-		let y = owner.position.y + this.offset.y - Game.active_scene.view_position.y;
+		const x = owner.position.x + this.offset.x - Game.active_scene.view_position.x;
+		const y = owner.position.y + this.offset.y - Game.active_scene.view_position.y;
 
 		switch (this.collider_type) {
 			case COLLIDERTYPE_POINT:
@@ -263,7 +263,7 @@ export class ColliderPoint {
 			case COLLIDERTYPE_RAYCAST:
 				ctx.beginPath();
 				ctx.moveTo(x, y);
-				let offset = MoveToward(this.width, this.height);
+				const offset = MoveToward(this.width, this.height);
 				ctx.lineTo(x + offset.x, y + offset.y);
 				ctx.lineWidth = 1;
 				ctx.strokeStyle = "#00ff00BB";
@@ -388,21 +388,21 @@ export class StaticCollisionData {
 	/**
 	 * @returns {number} A number representing the distance between the start of the collision and it's end.
 	 */
-	MagnitudeHit() {
+	MagnitudeHit(): number {
 		return PointDistance(this.start.x, this.start.y, this.hit.x, this.hit.y);
 	}
 
 	/**
 	 * @returns {number} A number representing the distance between the start of the collision and the last free position.
 	 */
-	MagnitudeFree() {
+	MagnitudeFree(): number {
 		return PointDistance(this.start.x, this.start.y, this.last_free.x, this.last_free.y);
 	}
 
 	/**
 	 * @returns {Vector2} A vector containing the distances in both axis needed to correct a collision.
 	 */
-	GetCorrectionOffsets() {
+	GetCorrectionOffsets(): Vector2 {
 		return new Vector2(this.hit.x - this.start.x - this.cast_length.x, this.hit.y - this.start.y - this.cast_length.y);
 	}
 }
@@ -446,11 +446,11 @@ export function RayCastStaticCollision(x: number, y: number, angle: number, dist
 	y = Math.floor(y);
 	if (dist <= 0) return GetStaticCollision(x, y);
 
-	let check_distance = GetRayCastIterationDistance(dist);
-	let last_free = new Vector2(x, y);
-	let check = new Vector2(x, y);
+	const check_distance = GetRayCastIterationDistance(dist);
+	const last_free = new Vector2(x, y);
+	const check = new Vector2(x, y);
 	while (true) {
-		let get_data = GetStaticCollision(check.x, check.y);
+		const get_data = GetStaticCollision(check.x, check.y);
 		// Update the start position to match raycast's
 		get_data.start.x = x;
 		get_data.start.y = y;
@@ -492,13 +492,13 @@ export function GetRayCastIterationDistance(dist: number): number {
 export function DrawStaticColliders(): void {
 	if (Game.active_scene.static_collision_map.length > 0) {
 		for (let yy = 0; yy < Game.active_scene.static_collision_map.length; yy++) {
-			let submap = Game.active_scene.static_collision_map[yy];
+			const submap = Game.active_scene.static_collision_map[yy];
 			if (submap != null && submap.length == 0) break;
 			for (let xx = 0; xx < submap.length; xx++) {
 				if (submap[xx] == 0) continue;
 
-				let xpos = xx * Game.active_scene.static_col_resolution - Game.active_scene.view_position.x;
-				let ypos = yy * Game.active_scene.static_col_resolution - Game.active_scene.view_position.y;
+				const xpos = xx * Game.active_scene.static_col_resolution - Game.active_scene.view_position.x;
+				const ypos = yy * Game.active_scene.static_col_resolution - Game.active_scene.view_position.y;
 
 				ctx.beginPath();
 				ctx.rect(xpos, ypos, Game.active_scene.static_col_resolution, Game.active_scene.static_col_resolution);
@@ -513,7 +513,7 @@ export function DrawStaticColliders(): void {
 		}
 	}
 	while (static_col_checks.length > 0) {
-		let pip: Array<number> = static_col_checks.pop() as Array<number>;
+		const pip: Array<number> = static_col_checks.pop() as Array<number>;
 		DrawDebugDot(pip[0] as number, pip[1] as number);
 	}
 }

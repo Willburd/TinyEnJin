@@ -8,9 +8,9 @@ import { Game, __FRAME } from "./engine";
  * @returns {void}
  */
 export function START_SCENE(new_scene: Scene | null): void {
-	let old_scene = Game.active_scene;
+	const old_scene = Game.active_scene;
 	if (old_scene != null) {
-		let datapack = old_scene.OnDestroy(); // Called before we destroy everything.
+		const datapack = old_scene.OnDestroy(); // Called before we destroy everything.
 		DESTROY_ALL(true, false);
 		if (new_scene != null) new_scene.OnTransfer(old_scene, datapack);
 	}

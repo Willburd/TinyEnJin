@@ -71,9 +71,9 @@ export function __INIT_SPRITE(img: HTMLImageElement): void {
  * @returns {void}
  */
 function __LOAD_IMG_FINALIZE(img: HTMLImageElement): void {
-	let nm = img.id;
-	let wid = img.width;
-	let hig = img.height;
+	const nm = img.id;
+	const wid = img.width;
+	const hig = img.height;
 	sprite_data[nm] = new SpriteData(img, wid, hig, Math.ceil(img.naturalWidth / wid));
 	console.log("Made image " + nm + " : " + sprite_data[nm].width + ", " + sprite_data[nm].height);
 	img.style.height = "0px";
@@ -129,8 +129,8 @@ export function __DRAWSPRITE(context: CanvasRenderingContext2D, spr: string, fra
 	}
 
 	// Solve for alignment
-	let wid = data.width;
-	let hig = data.height;
+	const wid = data.width;
+	const hig = data.height;
 	let vx = x;
 	let vy = y;
 	if (context == ctx) {

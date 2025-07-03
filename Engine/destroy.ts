@@ -10,7 +10,7 @@ export let entities_destroyed = 0;
  * @returns {void}
  */
 export function DESTROY_ALL(unloading: boolean, forced: boolean): void {
-	let new_list: Array<Entity> = [];
+	const new_list: Array<Entity> = [];
 	Game.active_game.GetEntityList().forEach((element) => {
 		if (element != null && !element.IsDestroyed()) {
 			if (!element.PERSISTANT || forced) {

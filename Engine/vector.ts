@@ -35,7 +35,7 @@ export class Vector2 {
 	 * @returns {Vector2} Returns this vector.
 	 */
 	AddHeading(angle: number, dist: number, axis: number = AXIS.BOTH): Vector2 {
-		let new_heading = MoveToward(angle, dist);
+		const new_heading = MoveToward(angle, dist);
 		if (axis & AXIS.X) this.x += new_heading.x;
 		if (axis & AXIS.Y) this.y += new_heading.y;
 		return this;
@@ -91,8 +91,8 @@ export class Vector2 {
 	 * @returns {Vector2} Returns this vector.
 	 */
 	Accelerate(acc: number, axis: number = AXIS.BOTH): Vector2 {
-		let org_x = axis & AXIS.X ? undefined : this.x;
-		let org_y = axis & AXIS.Y ? undefined : this.y;
+		const org_x = axis & AXIS.X ? undefined : this.x;
+		const org_y = axis & AXIS.Y ? undefined : this.y;
 		this.Add(MoveToward(this.Heading(), acc));
 		if (org_x != undefined) this.x = org_x;
 		if (org_y != undefined) this.y = org_y;
@@ -106,13 +106,13 @@ export class Vector2 {
 	 */
 	Decelerate(decl: number, axis: number = AXIS.BOTH): Vector2 {
 		if (this.x == 0 && this.y == 0) return this;
-		let org_x = axis & AXIS.X ? undefined : this.x;
-		let org_y = axis & AXIS.Y ? undefined : this.y;
+		const org_x = axis & AXIS.X ? undefined : this.x;
+		const org_y = axis & AXIS.Y ? undefined : this.y;
 
 		let dist = this.Magnitude() - Math.abs(decl);
 		if (dist < 0) dist = 0;
 
-		let head = this.Heading();
+		const head = this.Heading();
 		let new_vec = Vector2.Identity();
 		if (head >= 0) new_vec = MoveToward(head, dist);
 		this.Zero(AXIS.BOTH).Add(new_vec, axis);
@@ -135,9 +135,9 @@ export class Vector2 {
 	 * @returns {Vector2} Returns this vector.
 	 */
 	Normalized(): Vector2 {
-		let heading = this.Heading();
+		const heading = this.Heading();
 		if (heading == -1) return this;
-		let new_vec = MoveToward(heading, 1);
+		const new_vec = MoveToward(heading, 1);
 		this.x = new_vec.x;
 		this.y = new_vec.y;
 		return this;

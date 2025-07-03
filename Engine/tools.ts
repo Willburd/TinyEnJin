@@ -20,7 +20,7 @@ import { Entity } from "./entity";
  * @returns {Vector2}
  */
 export function ConstrainPoint(x: number, y: number, tlx: number, tly: number, brx: number, bry: number): Vector2 {
-	let pr = new Vector2(x, y);
+	const pr = new Vector2(x, y);
 	if (x < tlx) pr.x = tlx;
 	if (x > brx) pr.x = brx;
 	if (y < tly) pr.y = tly;
@@ -126,8 +126,8 @@ export function PointInsideRectangle(x: number, y: number, tlx: number, tly: num
  * @returns {boolean} If the rectangles overlap.
  */
 export function rectangle_inside_rectangle(tlx: number, tly: number, brx: number, bry: number, tlx2: number, tly2: number, brx2: number, bry2: number): boolean {
-	let center_x = tlx + (brx - tlx) * 0.5;
-	let center_y = tly + (bry - tly) * 0.5;
+	const center_x = tlx + (brx - tlx) * 0.5;
+	const center_y = tly + (bry - tly) * 0.5;
 	if (PointInsideRectangle(center_x, center_y, tlx2, tly2, brx2, bry2)) return true; // Center
 	if (PointInsideRectangle(tlx, tly, tlx2, tly2, brx2, bry2)) return true; // TL
 	if (PointInsideRectangle(brx, tly, tlx2, tly2, brx2, bry2)) return true; // TR
@@ -252,7 +252,7 @@ export function AngleTo(x: number, y: number, ent: Entity): number {
 export function MoveToward(angle: number, distance: number): Vector2 {
 	if (angle < 0) return Vector2.Identity();
 	if (distance == 0) return Vector2.Identity();
-	let dir = angle / (180 / Math.PI);
+	const dir = angle / (180 / Math.PI);
 	return new Vector2(Math.cos(dir) * distance, Math.sin(dir) * distance);
 }
 
@@ -282,7 +282,7 @@ export function AngleSnap(angle: number, snap: number): number {
  * @returns {number} The current index from 0 to max_index that the angle would be if converted from degrees to segments.
  */
 export function AngleToIndex(angle: number, max_index: number): number {
-	let angle_per_index = 360 / max_index;
+	const angle_per_index = 360 / max_index;
 	return Math.round(angle / angle_per_index);
 }
 
@@ -295,8 +295,8 @@ export function AngleToIndex(angle: number, max_index: number): number {
  * @returns {Vector2} A non-normalized vector representing the current inputs of up down left and right.
  */
 export function GetInputVector(upkey: string, downkey: string, leftkey: string, rightkey: string): Vector2 {
-	let UD = (isKeyHeld(downkey) ? 1 : 0) - (isKeyHeld(upkey) ? 1 : 0);
-	let LR = (isKeyHeld(rightkey) ? 1 : 0) - (isKeyHeld(leftkey) ? 1 : 0);
+	const UD = (isKeyHeld(downkey) ? 1 : 0) - (isKeyHeld(upkey) ? 1 : 0);
+	const LR = (isKeyHeld(rightkey) ? 1 : 0) - (isKeyHeld(leftkey) ? 1 : 0);
 	return new Vector2(LR, UD);
 }
 
@@ -354,7 +354,7 @@ export function DrawSprite(draw_canvas: CanvasRenderingContext2D, spr: string, f
  */
 export function AnimationLength(spr: string): number {
 	if (spr == "") return 0;
-	let data = sprite_data[spr] as SpriteData;
+	const data = sprite_data[spr] as SpriteData;
 	return data.anim_length;
 }
 

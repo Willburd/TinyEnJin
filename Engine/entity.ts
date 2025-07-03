@@ -122,14 +122,14 @@ export class Entity {
 	 * Custom early update code. Can be safely overridden. Happens before an entity runs __INTERNAL_UPDATE();
 	 * @returns {void}
 	 */
-	public EarlyUpdate() {}
+	public EarlyUpdate(): void {}
 	/**
 	 * Entity internal update. Handles processing of automatically adjusted vars, or functions called by an entity's state.
 	 * @returns {void}
 	 */
-	public __INTERNAL_UPDATE() {
-		let len = AnimationLength(this.sprite);
-		let frame_before = this.frame;
+	public __INTERNAL_UPDATE(): void {
+		const len = AnimationLength(this.sprite);
+		const frame_before = this.frame;
 		this.frame += this.animation_speed;
 		if (this.animation_speed > 0 && len > 0 && Math.abs(this.frame) % len <= Math.abs(frame_before) % len) this.OnAnimationLoop();
 	}

@@ -84,7 +84,7 @@ export function __FRAME(currentTimeMs: number, forced: boolean = false): void {
 		__UPDATE_KEYPRESS();
 	}
 	if (Game.active_scene != null) {
-		let rendered_ents = __RENDER();
+		const rendered_ents = __RENDER();
 		if (rendered_ents >= RENDER_WARNING_LIMIT) console.error("EXCESSIVE ENTITY RENDERING: " + rendered_ents);
 	}
 }
@@ -206,13 +206,13 @@ export class Game {
 		}
 
 		// Update objects
-		let all_colliding_entities: Array<Entity> = [];
+		const all_colliding_entities: Array<Entity> = [];
 		let processed_ents: number = 0;
 
 		// Process and sort depth for rendering
 		this.depth_sort = [];
 		if (this.all_entities.length > 0) {
-			let new_list: Array<Entity> = []; // Removing nulls
+			const new_list: Array<Entity> = []; // Removing nulls
 			this.all_entities.forEach((enu) => {
 				// Update early event
 				if (enu != null && !enu.IsDestroyed() && enu.PROCESSFLAGS & this.__MODESTATE) enu.EarlyUpdate();
@@ -234,7 +234,7 @@ export class Game {
 						if (enu.visible && enu.RENDERFLAGS & this.__MODESTATE) {
 							// Prepare for drawing
 							if (this.depth_sort[100000 + enu.depth] == undefined) this.depth_sort[100000 + enu.depth] = [];
-							let sublist = this.depth_sort[100000 + enu.depth] as Array<Entity>;
+							const sublist = this.depth_sort[100000 + enu.depth] as Array<Entity>;
 							sublist.push(enu);
 						}
 						// prepare to resolve collisions
