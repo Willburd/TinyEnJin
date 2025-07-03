@@ -1,9 +1,3 @@
-export function MovePoint(x,y,motionx,motiony)
-{
+export function MovePoint(x:number, y:number, motionx:number, motiony:number) {}
 
-}
-
-export function MoveRectangle(tlx,tly,brx,bry,motionx,motiony)
-{
-
-}
+export function MoveRectangle(tlx:number, tly:number, brx:number, bry:number, motionx:number, motiony:number) {}
