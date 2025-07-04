@@ -1,5 +1,5 @@
-export const ENTITY_CAP: number = 60; //2048; (Use lower to catch memory leaks)
-export const RENDER_WARNING_LIMIT: number = 256; // Amount of sprites that can be drawn per frame before it starts giving warnings
+export const ENTITY_CAP: number = 4096; //2048; (Use lower to catch memory leaks)
+export const RENDER_WARNING_LIMIT: number = 5000; // Amount of sprites that can be drawn per frame before it starts giving warnings
 export const ENTITY_LIST_REFRESH_THRESHOLD: number = 20; // Amount of nulls in the entity processing list that triggers a rebuild
 export const DRAW_COLLIDERS: boolean = false;
 export const DRAW_STATIC_COLLIDERS: boolean = true;

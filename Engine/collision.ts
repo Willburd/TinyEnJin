@@ -495,6 +495,7 @@ export function DrawStaticColliders(): void {
 			const submap = Game.active_scene.static_collision_map[yy];
 			if (submap != null && submap.length == 0) break;
 			for (let xx = 0; xx < submap.length; xx++) {
+				if (submap[xx] == undefined) continue;
 				if (submap[xx] == 0) continue;
 
 				const xpos = xx * Game.active_scene.static_col_resolution - Game.active_scene.view_position.x;

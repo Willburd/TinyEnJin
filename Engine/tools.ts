@@ -355,6 +355,7 @@ export function DrawSprite(draw_canvas: CanvasRenderingContext2D, spr: string, f
 export function AnimationLength(spr: string): number {
 	if (spr == "") return 0;
 	const data = sprite_data[spr] as SpriteData;
+	if(data == undefined) return 0;
 	return data.anim_length;
 }
 

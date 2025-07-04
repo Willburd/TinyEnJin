@@ -101,8 +101,7 @@ export class Game {
 	protected __MODESTATE: number = GAMEMODE.BASIC;
 	private init_queue: Array<Entity> = [];
 	private depth_sort: Array<Array<Entity>> = [];
-	private all_entities: Array<Entity> = [];
-	private recently_free_slots: number[] = [];
+	private all_entities: Array<Entity|null> = [];
 	protected id_to_entity: Record<string, Entity> = {};
 
 	private __UPDATERATE: number = 60; // Updates per second, browser sets fps
@@ -177,11 +176,8 @@ export class Game {
 	 */
 	protected __ENTITYINIT(inti: Entity): void {
 		// Use recently freed slots first
-		let finder = Game.active_game.recently_free_slots.pop();
-		if (finder == undefined) {
-			finder = Game.active_game.all_entities.length;
-			if (finder >= ENTITY_CAP) console.error("BREACHING ENTITY CAP: " + finder);
-		}
+		let finder = Game.active_game.all_entities.length;
+		if (finder >= ENTITY_CAP) console.error("BREACHING ENTITY CAP: " + finder);
 		//console.log(Game.active_game.recently_free_slots);
 		Game.active_game.all_entities[finder] = inti;
 		inti.__INTERNAL_INIT(finder);
@@ -263,7 +259,7 @@ export class Game {
 	 * Returns the current list of processing entities
 	 * @returns {Array<Entity>}
 	 */
-	public GetEntityList(): Array<Entity> {
+	public GetEntityList(): Array<Entity|null> {
 		return this.all_entities;
 	}
 
@@ -288,9 +284,8 @@ export class Game {
 	 * @returns {void}
 	 */
 	public __REMOVEENTITY(ent: Entity): void {
-		delete this.all_entities[ent.GetProcessSlot()];
+		this.all_entities[ent.GetProcessSlot()] = null;
 		delete this.id_to_entity[ent.GetIdentifier()];
-		this.recently_free_slots.push(ent.GetProcessSlot());
 	}
 
 	/**
@@ -301,6 +296,5 @@ export class Game {
 	public REFRESH_ENTITY_LIST(new_list: Array<Entity>): void {
 		console.log("Refreshed entity list. " + Game.active_game.all_entities.length + " => " + new_list.length + " Diff: " + Math.abs(new_list.length - Game.active_game.all_entities.length));
 		Game.active_game.all_entities = new_list;
-		Game.active_game.recently_free_slots = [];
 	}
 }
